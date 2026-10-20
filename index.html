@@ -6,9 +6,6 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Lumin">
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
-    <meta name="theme-color" content="#121212" media="(prefers-color-scheme: dark)">
-    
     <title>Microlearning PWA</title>
 
     <style>
@@ -16,149 +13,123 @@
            CSS VARIABLES & THEMING
            ========================================================================== */
         :root {
-            --bg-color: #f2f2f7;
-            --surface-color: rgba(255, 255, 255, 0.75);
-            --surface-solid: #ffffff;
-            --text-primary: #1c1c1e;
-            --text-secondary: #8e8e93;
-            --accent-color: #007aff;
-            --danger-color: #ff3b30;
-            --success-color: #34c759;
-            --border-color: rgba(60, 60, 67, 0.1);
-            --glass-blur: blur(20px);
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.04);
-            --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
-            --radius-lg: 24px;
-            --radius-md: 16px;
-            --radius-sm: 8px;
-            --safe-top: env(safe-area-inset-top, 0px);
-            --safe-bottom: env(safe-area-inset-bottom, 0px);
-            --nav-height: 65px;
-            --header-height: 60px;
+            --bg-color: #f2f2f7; --surface-color: rgba(255, 255, 255, 0.75); --surface-solid: #ffffff;
+            --text-primary: #1c1c1e; --text-secondary: #8e8e93; --accent-color: #007aff;
+            --danger-color: #ff3b30; --success-color: #34c759; --border-color: rgba(60, 60, 67, 0.1);
+            --glass-blur: blur(20px); --shadow-sm: 0 2px 8px rgba(0,0,0,0.04); --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+            --radius-lg: 24px; --radius-md: 16px; --radius-sm: 8px;
+            --safe-top: env(safe-area-inset-top, 0px); --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --nav-height: 65px; --header-height: 60px;
         }
-
         [data-theme="dark"] {
-            --bg-color: #000000;
-            --surface-color: rgba(28, 28, 30, 0.75);
-            --surface-solid: #1c1c1e;
-            --text-primary: #f2f2f7;
-            --text-secondary: #8e8e93;
-            --border-color: rgba(84, 84, 88, 0.3);
-            --shadow-sm: 0 2px 8px rgba(0,0,0,0.2);
-            --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
+            --bg-color: #000000; --surface-color: rgba(28, 28, 30, 0.75); --surface-solid: #1c1c1e;
+            --text-primary: #f2f2f7; --text-secondary: #8e8e93; --border-color: rgba(84, 84, 88, 0.3);
+            --shadow-sm: 0 2px 8px rgba(0,0,0,0.2); --shadow-lg: 0 8px 32px rgba(0,0,0,0.4);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color); color: var(--text-primary);
-            overflow: hidden; user-select: none; -webkit-user-select: none;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
-        button, input, textarea { font-family: inherit; font-size: 16px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background-color: var(--bg-color); color: var(--text-primary); overflow: hidden; user-select: none; -webkit-user-select: none; transition: background-color 0.3s ease, color 0.3s ease; }
+        button, input, select, textarea { font-family: inherit; font-size: 16px; }
 
-        /* HEADER */
-        .app-header {
-            position: fixed; top: 0; left: 0; right: 0;
-            height: calc(var(--header-height) + var(--safe-top));
-            padding-top: var(--safe-top);
-            background: var(--surface-color); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-            border-bottom: 1px solid var(--border-color); z-index: 100;
-        }
+        /* HEADER & NAVIGATION */
+        .app-header { position: fixed; top: 0; left: 0; right: 0; height: calc(var(--header-height) + var(--safe-top)); padding-top: var(--safe-top); background: var(--surface-color); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--border-color); z-index: 100; }
         .header-content { display: flex; justify-content: space-between; align-items: center; height: var(--header-height); padding: 0 20px; }
         .header-content h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-        
-        #app-container {
-            position: fixed; top: calc(var(--header-height) + var(--safe-top));
-            bottom: calc(var(--nav-height) + var(--safe-bottom));
-            left: 0; right: 0; overflow: hidden;
-        }
+        #app-container { position: fixed; top: calc(var(--header-height) + var(--safe-top)); bottom: calc(var(--nav-height) + var(--safe-bottom)); left: 0; right: 0; overflow: hidden; }
         .tab-view { display: none; height: 100%; width: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
         .tab-view.active { display: block; animation: fadeIn 0.2s ease-out; }
         .view-padding { padding: 20px; padding-bottom: 40px; }
-
-        /* NAVIGATION */
-        .bottom-nav {
-            position: fixed; bottom: 0; left: 0; right: 0;
-            height: calc(var(--nav-height) + var(--safe-bottom)); padding-bottom: var(--safe-bottom);
-            background: var(--surface-color); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur);
-            border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 100;
-        }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--nav-height) + var(--safe-bottom)); padding-bottom: var(--safe-bottom); background: var(--surface-color); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
         .nav-item { background: none; border: none; color: var(--text-secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; width: 60px; height: 100%; cursor: pointer; transition: color 0.2s; }
         .nav-item.active { color: var(--accent-color); }
         .nav-item svg { margin-bottom: 4px; }
         .nav-item span { font-size: 10px; font-weight: 600; }
 
-        /* FEED */
+        /* FEED (No Scroll Cards) */
         .scroll-snap-container { height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
         .scroll-snap-container::-webkit-scrollbar { display: none; }
         .feed-card-wrapper { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; display: flex; align-items: center; justify-content: center; padding: 10px 20px; }
         .feed-card { background: var(--surface-solid); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); width: 100%; max-width: 400px; height: 95%; display: flex; flex-direction: column; overflow: hidden; position: relative; border: 1px solid var(--border-color); }
-        .card-image-container { flex: 1; min-height: 40%; background: var(--bg-color); display: flex; align-items: center; justify-content: center; overflow: hidden; }
-        .card-image { width: 100%; height: 100%; object-fit: cover; transition: opacity 0.3s; }
+        .card-image-container { flex: 1.2; background: var(--bg-color); display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .card-image { width: 100%; height: 100%; object-fit: cover; }
         .image-fallback { padding: 20px; text-align: center; background: linear-gradient(135deg, var(--surface-solid), var(--border-color)); width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; }
-        .card-content { padding: 24px; flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-        .card-tag { font-size: 12px; font-weight: 700; color: var(--accent-color); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        .card-title { font-size: 24px; font-weight: 700; line-height: 1.2; margin-bottom: 12px; }
-        .card-summary { font-size: 16px; line-height: 1.5; color: var(--text-secondary); margin-bottom: 16px; }
-        .card-quote { border-left: 3px solid var(--accent-color); padding-left: 12px; font-style: italic; font-size: 15px; margin-bottom: 16px; background: rgba(0, 122, 255, 0.05); padding: 12px; border-radius: 0 var(--radius-sm) var(--radius-sm) 0; }
+        .card-content { padding: 20px; flex: 1; display: flex; flex-direction: column; overflow: hidden; justify-content: center; }
+        .card-tag { font-size: 11px; font-weight: 700; color: var(--accent-color); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+        .card-title { font-size: 22px; font-weight: 700; line-height: 1.1; margin-bottom: 10px; }
+        .card-summary { font-size: 15px; line-height: 1.4; color: var(--text-secondary); margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
         .card-actions { display: flex; justify-content: space-around; padding: 12px 20px; background: var(--surface-solid); border-top: 1px solid var(--border-color); }
         .action-btn { background: none; border: none; color: var(--text-primary); display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 60px; min-height: 44px; cursor: pointer; }
         .action-btn.liked svg { fill: var(--danger-color); stroke: var(--danger-color); }
 
-        /* MIND MAP */
+        /* MAP */
         #mindmap-viewport { width: 100%; height: 100%; background: radial-gradient(circle, var(--surface-color) 10%, var(--bg-color) 100%); position: relative; touch-action: none; overflow: hidden; }
         #mindmap-canvas { position: absolute; top: 0; left: 0; width: 3000px; height: 3000px; transform-origin: 0 0; }
+        .smooth-pan { transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1); }
         #mindmap-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
         .map-line { stroke: var(--border-color); stroke-width: 2; fill: none; }
-        .map-node { position: absolute; background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px 16px; box-shadow: var(--shadow-sm); min-width: 120px; max-width: 250px; transform: translate(-50%, -50%); cursor: pointer; z-index: 2; font-size: 14px; }
+        .map-node { position: absolute; background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px 16px; box-shadow: var(--shadow-sm); max-width: 250px; transform: translate(-50%, -50%); cursor: pointer; z-index: 2; font-size: 14px; text-align: center; }
         .node-root { background: var(--accent-color); color: white; font-weight: bold; font-size: 18px; border-radius: var(--radius-lg); box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4); }
         .node-book { border-left: 4px solid var(--accent-color); font-weight: 600; }
         .node-note { background: rgba(255, 204, 0, 0.1); border-left: 4px solid #ffcc00; font-style: italic; }
         .map-controls { position: absolute; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 10; }
+        .index-control { position: absolute; top: 20px; left: 20px; z-index: 10; }
         .icon-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--surface-color); backdrop-filter: var(--glass-blur); border: 1px solid var(--border-color); color: var(--text-primary); display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: var(--shadow-sm); cursor: pointer; }
 
-        /* FLASHCARDS */
-        .learn-dashboard { background: var(--surface-solid); border-radius: var(--radius-lg); padding: 24px; text-align: center; box-shadow: var(--shadow-sm); margin-bottom: 20px; }
-        .stat-card { margin-bottom: 20px; }
-        .stat-card span { display: block; font-size: 48px; font-weight: 700; color: var(--accent-color); }
+        /* STUDY WORKFLOW */
+        .study-setup { background: var(--surface-solid); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
+        .form-group { margin-bottom: 20px; text-align: left; }
+        .form-group label { display: block; font-size: 12px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600; }
+        select { width: 100%; padding: 12px 16px; border-radius: var(--radius-sm); border: 1px solid var(--border-color); background: var(--bg-color); color: var(--text-primary); font-size: 16px; outline: none; -webkit-appearance: none; }
+        
+        /* Native iOS Toggle Switch style */
+        .toggle-switch { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; border-top: 1px solid var(--border-color); }
+        .toggle-switch span { font-weight: 500; }
+        .switch { position: relative; display: inline-block; width: 50px; height: 30px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: var(--border-color); transition: .4s; border-radius: 30px; }
+        .slider:before { position: absolute; content: ""; height: 26px; width: 26px; left: 2px; bottom: 2px; background-color: white; transition: .3s; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        input:checked + .slider { background-color: var(--success-color); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+        /* STUDY UI (Flashcards & Quiz) */
         .flashcard-container { width: 100%; height: 60vh; perspective: 1000px; margin: 20px 0; }
         .flashcard { width: 100%; height: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; cursor: pointer; }
         .flashcard.is-flipped { transform: rotateY(180deg); }
-        .fc-front, .fc-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--surface-solid); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center; border: 1px solid var(--border-color); }
+        .fc-front, .fc-back, .quiz-card { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--surface-solid); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center; border: 1px solid var(--border-color); }
         .fc-back { transform: rotateY(180deg); background: var(--bg-color); }
         .fc-label { position: absolute; top: 20px; font-size: 12px; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 1px; }
-        .fc-actions { display: flex; gap: 15px; justify-content: center; margin-top: 20px; }
-        .hint-text { text-align: center; color: var(--text-secondary); font-size: 14px; margin-top: 15px; }
+        .quiz-card { justify-content: flex-start; padding-top: 50px; overflow-y: auto; }
+        .quiz-option { width: 100%; padding: 15px; margin-bottom: 10px; border: 2px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-color); color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; }
+        .quiz-option.correct { background: var(--success-color); color: white; border-color: var(--success-color); }
+        .quiz-option.wrong { background: var(--danger-color); color: white; border-color: var(--danger-color); }
 
         /* MODALS */
         .fullscreen-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 200; padding: calc(var(--safe-top) + 20px) 20px calc(var(--safe-bottom) + 20px); }
-        .modal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-        .bottom-sheet { position: fixed; bottom: 0; left: 0; width: 100%; background: var(--surface-solid); border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 20px 20px calc(var(--safe-bottom) + 20px); box-shadow: 0 -10px 40px rgba(0,0,0,0.15); z-index: 300; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1); }
+        .modal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .back-btn { background: none; border: none; font-size: 17px; color: var(--accent-color); font-weight: 600; display: flex; align-items: center; gap: 5px; cursor: pointer; }
+        
+        .bottom-sheet { position: fixed; bottom: 0; left: 0; width: 100%; max-height: 85vh; overflow-y: auto; background: var(--surface-solid); border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 20px 20px calc(var(--safe-bottom) + 20px); box-shadow: 0 -10px 40px rgba(0,0,0,0.15); z-index: 300; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1); }
         .bottom-sheet.open { transform: translateY(0); }
         .sheet-handle { width: 40px; height: 5px; background: var(--border-color); border-radius: 3px; margin: 0 auto 20px; }
         body.modal-open::after { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 250; animation: fadeIn 0.2s; }
 
-        /* UTILS & BUTTONS */
+        /* UTILS */
         .hidden { display: none !important; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .primary-btn, .secondary-btn, .danger-btn, .success-btn, .full-width-btn { padding: 14px 24px; border-radius: var(--radius-md); border: none; font-weight: 600; cursor: pointer; transition: transform 0.1s, opacity 0.2s; min-height: 44px; }
+        .primary-btn, .secondary-btn, .danger-btn, .success-btn, .full-width-btn { padding: 14px 24px; border-radius: var(--radius-md); border: none; font-weight: 600; cursor: pointer; transition: transform 0.1s; min-height: 44px; }
         .primary-btn:active { transform: scale(0.97); }
-        .primary-btn { background: var(--accent-color); color: white; width: 100%; margin-bottom: 10px; }
+        .primary-btn { background: var(--accent-color); color: white; width: 100%; }
         .secondary-btn { background: var(--border-color); color: var(--text-primary); width: 100%; }
-        .danger-btn { background: var(--danger-color); color: white; flex: 1; }
-        .success-btn { background: var(--success-color); color: white; flex: 1; }
+        .danger-btn { background: var(--danger-color); color: white; width: 100%; }
+        .success-btn { background: var(--success-color); color: white; width: 100%; }
         .full-width-btn { width: 100%; background: transparent; color: var(--text-secondary); margin-top: 10px; }
         input[type="text"], textarea { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-color); color: var(--text-primary); margin-bottom: 15px; outline: none; }
-        input[type="text"]:focus, textarea:focus { border-color: var(--accent-color); }
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
         .stat-box { background: var(--surface-solid); padding: 15px; border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border-color); }
         .stat-box span { display: block; font-size: 24px; font-weight: bold; color: var(--accent-color); }
         .stat-box label { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; }
-        .section-title { margin-bottom: 15px; }
-        .data-actions { margin-top: 40px; display: flex; flex-direction: column; gap: 10px; }
-        .text-btn { background: none; border: none; padding: 15px; color: var(--accent-color); font-weight: bold; cursor: pointer; }
-        .danger-text { color: var(--danger-color); }
+        
+        .list-item { padding: 16px; border-bottom: 1px solid var(--border-color); font-weight: 600; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -180,43 +151,47 @@
             <div id="feed-container" class="scroll-snap-container"></div>
         </section>
 
-        <!-- TAB B: E-LEARNING -->
+        <!-- TAB B: E-LEARNING (Setup Wizard) -->
         <section id="tab-learn" class="tab-view">
             <div class="view-padding">
                 <header class="tab-header" style="margin-bottom:20px;">
-                    <h2>Study Deck</h2>
-                    <p style="color:var(--text-secondary);">Turn saved concepts into active knowledge.</p>
+                    <h2>Study Session</h2>
+                    <p style="color:var(--text-secondary);">Configure your revision workflow.</p>
                 </header>
-                <div class="learn-dashboard">
-                    <div class="stat-card">
-                        <span id="learn-due-count">0</span>
-                        <label>Cards Ready</label>
+                
+                <div class="study-setup">
+                    <div class="form-group">
+                        <label>Mode</label>
+                        <select id="study-mode">
+                            <option value="flashcards">Flashcards (Active Recall)</option>
+                            <option value="quiz">Multiple Choice Quiz</option>
+                        </select>
                     </div>
-                    <button id="btn-start-flashcards" class="primary-btn">Start Flashcards</button>
-                </div>
 
-                <div id="flashcard-modal" class="fullscreen-modal hidden">
-                    <div class="modal-nav">
-                        <button id="close-flashcards" class="secondary-btn" style="width:auto; padding:8px 15px;">Done</button>
-                        <span id="fc-progress">1 / 5</span>
+                    <div class="form-group">
+                        <label>Topic</label>
+                        <select id="study-topic">
+                            <option value="psychology">Psychology</option>
+                        </select>
                     </div>
-                    <div class="flashcard-container">
-                        <div class="flashcard" id="current-flashcard">
-                            <div class="fc-front">
-                                <span class="fc-label">Question</span>
-                                <h3 id="fc-q"></h3>
-                            </div>
-                            <div class="fc-back">
-                                <span class="fc-label">Answer</span>
-                                <p id="fc-a"></p>
-                            </div>
-                        </div>
+
+                    <div class="form-group">
+                        <label>Source Filter</label>
+                        <select id="study-source">
+                            <option value="all">Shuffle All Books</option>
+                            <!-- Dynamically populated -->
+                        </select>
                     </div>
-                    <div class="fc-actions hidden" id="fc-controls">
-                        <button id="btn-fc-missed" class="danger-btn">Review Again</button>
-                        <button id="btn-fc-knew" class="success-btn">Got It</button>
+
+                    <div class="toggle-switch">
+                        <span>Only study Liked items</span>
+                        <label class="switch">
+                            <input type="checkbox" id="study-liked-only">
+                            <span class="slider"></span>
+                        </label>
                     </div>
-                    <p class="hint-text">Tap card to flip</p>
+                    
+                    <button id="btn-start-study" class="primary-btn" style="margin-top:20px;">Start Session</button>
                 </div>
             </div>
         </section>
@@ -224,6 +199,12 @@
         <!-- TAB C: NOTEPAD -->
         <section id="tab-map" class="tab-view">
             <div id="mindmap-viewport">
+                <div class="index-control">
+                    <button id="btn-map-index" class="icon-btn" style="width: auto; padding: 0 16px; border-radius: 20px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:6px;"><line x1="8" y1="6" x2="21" y2="6"></line><line x1="8" y1="12" x2="21" y2="12"></line><line x1="8" y1="18" x2="21" y2="18"></line><line x1="3" y1="6" x2="3.01" y2="6"></line><line x1="3" y1="12" x2="3.01" y2="12"></line><line x1="3" y1="18" x2="3.01" y2="18"></line></svg>
+                        Index
+                    </button>
+                </div>
                 <div id="mindmap-canvas"></div>
             </div>
             <div class="map-controls">
@@ -243,15 +224,69 @@
                     <div class="stat-box"><span id="stat-likes">0</span><label>Liked</label></div>
                     <div class="stat-box"><span id="stat-notes">0</span><label>Notes</label></div>
                 </div>
-                <div class="data-actions">
-                    <button id="btn-export-data" class="text-btn">Export Backup JSON</button>
-                    <button id="btn-reset-data" class="text-btn danger-text">Reset All Data</button>
+                <div style="margin-top:40px; display:flex; flex-direction:column; gap:10px;">
+                    <button id="btn-export-data" class="secondary-btn">Export Backup JSON</button>
+                    <button id="btn-reset-data" class="full-width-btn" style="color:var(--danger-color)">Reset All Data</button>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- Modals -->
+    <!-- FULLSCREEN MODAL: STUDY AREA -->
+    <div id="study-modal" class="fullscreen-modal hidden">
+        <div class="modal-nav">
+            <button id="close-study" class="back-btn">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                Back
+            </button>
+            <span id="study-progress" style="font-weight:600; color:var(--text-secondary);">1 / 5</span>
+        </div>
+        
+        <!-- Flashcard View -->
+        <div id="view-flashcard" class="flashcard-container hidden">
+            <div class="flashcard" id="current-flashcard">
+                <div class="fc-front">
+                    <span class="fc-label">Question</span>
+                    <h3 id="fc-q"></h3>
+                </div>
+                <div class="fc-back">
+                    <span class="fc-label">Answer</span>
+                    <p id="fc-a"></p>
+                </div>
+            </div>
+            <p style="text-align:center; color:var(--text-secondary); margin-top:15px; font-size:14px;">Tap card to flip</p>
+            <div style="display:flex; gap:15px; margin-top:20px;" class="hidden" id="fc-controls">
+                <button id="btn-fc-missed" class="danger-btn">Review Again</button>
+                <button id="btn-fc-knew" class="success-btn">Got It</button>
+            </div>
+        </div>
+
+        <!-- Quiz View -->
+        <div id="view-quiz" class="flashcard-container hidden">
+            <div class="quiz-card">
+                <span class="fc-label">Quiz</span>
+                <h3 id="quiz-q" style="margin-bottom:25px;"></h3>
+                <div id="quiz-options" style="width:100%;"></div>
+                <div id="quiz-feedback" style="margin-top:20px; font-weight:600; min-height:40px;"></div>
+                <button id="btn-quiz-next" class="primary-btn hidden" style="margin-top:15px;">Next Question</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- BOTTOM SHEETS -->
+    
+    <!-- Feed Expand Content Modal -->
+    <div id="expand-modal" class="bottom-sheet hidden">
+        <div class="sheet-handle"></div>
+        <span id="expand-tag" style="font-size:12px; font-weight:700; color:var(--accent-color); text-transform:uppercase;"></span>
+        <h2 id="expand-title" style="margin: 5px 0 15px 0;"></h2>
+        <p id="expand-summary" style="line-height:1.5; margin-bottom:15px; color:var(--text-secondary);"></p>
+        <div id="expand-quote" style="border-left: 3px solid var(--accent-color); padding: 12px; font-style: italic; background: rgba(0, 122, 255, 0.05); border-radius: 0 8px 8px 0; margin-bottom:15px;"></div>
+        <p style="font-weight:600; margin-bottom: 20px;">Reflection: <span id="expand-question" style="font-weight:normal;"></span></p>
+        <button id="close-expand-modal" class="primary-btn">Close</button>
+    </div>
+
+    <!-- Add Note Modal -->
     <div id="note-modal" class="bottom-sheet hidden">
         <div class="sheet-handle"></div>
         <h3 style="margin-bottom:10px;">Add Note</h3>
@@ -261,7 +296,14 @@
         <button id="close-note-modal" class="full-width-btn">Cancel</button>
     </div>
 
-    <!-- Nav -->
+    <!-- Map Index Modal -->
+    <div id="index-modal" class="bottom-sheet hidden">
+        <div class="sheet-handle"></div>
+        <h3 style="margin-bottom:15px;">Jump to Book</h3>
+        <div id="index-list"></div>
+        <button id="close-index-modal" class="full-width-btn">Close</button>
+    </div>
+
     <nav class="bottom-nav">
         <button class="nav-item active" data-target="tab-home">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
@@ -283,49 +325,50 @@
 
     <script>
         /* ==========================================================================
-           HARDCODED DATA (Replaces fetching data.json for single-file portability)
+           DATA & LOGIC
            ========================================================================== */
         const CONTENT_LIBRARY = [
-          { "id": "psy-001", "type": "book_concept", "topic": "Psychology", "source": { "title": "Thinking, Fast and Slow", "author": "Daniel Kahneman", "isbn": "9780374533557" }, "theme": "Cognitive Biases", "title": "System 1 vs System 2", "summary": "The brain has two operating systems. System 1 is fast, automatic, emotional, and unconscious. System 2 is slow, effortful, logical, and conscious.", "example": "Reading a billboard on the highway is System 1. Filling out your tax return is System 2.", "takeaway": "We often substitute difficult questions with easier ones automatically (System 1) without realising it. Force System 2 to engage when the stakes are high.", "reflectionQuestion": "When was the last time you made a snap judgment that turned out to be completely wrong?", "estimatedMinutes": 2, "tags": ["decision-making", "cognition"], "quiz": { "question": "Which system is responsible for calculating 17 x 24?", "options": ["System 1", "System 2", "The limbic system", "The automatic system"], "answer": 1, "explanation": "System 2 handles effortful mental activities like complex math." } },
-          { "id": "psy-002", "type": "book_concept", "topic": "Psychology", "source": { "title": "Influence", "author": "Robert B. Cialdini", "isbn": "9780061241895" }, "theme": "Persuasion", "title": "The Rule of Reciprocation", "summary": "Humans are wired to try to repay, in kind, what another person has provided us. This sense of future obligation is a powerful tool for influence.", "example": "A charity sends you personalized address labels in the mail. You feel obligated to donate, even if you didn't ask for the labels.", "takeaway": "Be wary of uninvited favours. You can accept the favour, but consciously separate it from your decision-making process.", "reflectionQuestion": "Have you ever bought something just because the salesperson gave you a free sample?", "estimatedMinutes": 2, "tags": ["social", "influence"], "quiz": { "question": "Why do free samples at supermarkets increase sales?", "options": ["They taste better", "People feel obligated to reciprocate", "They make people hungry", "They lower the price"], "answer": 1, "explanation": "The rule of reciprocation triggers a feeling of indebtedness." } },
-          { "id": "psy-003", "type": "book_concept", "topic": "Psychology", "source": { "title": "Atomic Habits", "author": "James Clear", "isbn": "9780735211292" }, "theme": "Habit Formation", "title": "Identity-Based Habits", "summary": "True behaviour change is identity change. You might start a habit because of motivation, but you'll stick with it because it becomes part of who you are.", "example": "Instead of saying 'I'm trying to quit smoking', say 'I'm not a smoker'.", "takeaway": "Every action you take is a vote for the type of person you wish to become. Focus on the identity, not just the outcome.", "reflectionQuestion": "What identity are your current daily habits voting for?", "estimatedMinutes": 1, "tags": ["habits", "identity"], "quiz": { "question": "According to Clear, what is the most effective level to change a habit?", "options": ["Outcomes (Results)", "Processes (Systems)", "Identity (Beliefs)", "Environment"], "answer": 2, "explanation": "Identity change shifts how you view yourself, making the habit stick." } },
-          { "id": "psy-004", "type": "book_concept", "topic": "Psychology", "source": { "title": "Man's Search for Meaning", "author": "Viktor E. Frankl", "isbn": "9780807014295" }, "theme": "Meaning", "title": "The Space Between Stimulus and Response", "summary": "Between stimulus and response, there is a space. In that space is our power to choose our response. In our response lies our growth and our freedom.", "example": "Someone cuts you off in traffic (stimulus). Before you honk and yell (response), you pause and realise they might be rushing to a hospital. You choose to let it go.", "takeaway": "You cannot always control what happens to you, but you can always control how you react.", "reflectionQuestion": "How can you widen the space between trigger and reaction today?", "estimatedMinutes": 3, "tags": ["stoicism", "resilience"], "quiz": { "question": "What does Frankl argue lies in the 'space' between stimulus and response?", "options": ["Anxiety", "Our power to choose", "Meaninglessness", "Habit"], "answer": 1, "explanation": "That space gives us the freedom to choose our reaction." } },
-          { "id": "psy-005", "type": "book_concept", "topic": "Psychology", "source": { "title": "Predictably Irrational", "author": "Dan Ariely", "isbn": "9780061353246" }, "theme": "Decision Making", "title": "The Decoy Effect", "summary": "Consumers will tend to have a specific change in preference between two options when also presented with a third option that is asymmetrically dominated.", "example": "A digital subscription is $59. Print is $125. Print + Digital is $125. The useless 'Print only' option makes the combo look like a steal.", "takeaway": "When choosing between options, evaluate them in isolation to see if you are being manipulated by a useless comparison point.", "reflectionQuestion": "Have you recently bought a 'premium' tier just because the middle tier looked like bad value?", "estimatedMinutes": 2, "tags": ["pricing", "bias"], "quiz": { "question": "What is the purpose of a 'decoy' pricing option?", "options": ["To be purchased frequently", "To make another option look more attractive", "To confuse the buyer", "To offer a budget alternative"], "answer": 1, "explanation": "The decoy is intentionally a bad deal to make the target option look like a bargain." } }
+          { "id": "psy-001", "type": "book_concept", "topic": "Psychology", "source": { "title": "Thinking, Fast and Slow", "author": "Daniel Kahneman", "isbn": "9780374533557" }, "theme": "Cognitive Biases", "title": "System 1 vs System 2", "summary": "The brain has two operating systems. System 1 is fast, automatic, emotional, and unconscious. System 2 is slow, effortful, logical, and conscious.", "takeaway": "We substitute difficult questions with easier ones automatically. Force System 2 to engage when stakes are high.", "reflectionQuestion": "When was the last time you made a snap judgment that turned out wrong?", "estimatedMinutes": 2, "quiz": { "question": "Which system calculates 17 x 24?", "options": ["System 1", "System 2", "Limbic system", "Automatic system"], "answer": 1, "explanation": "System 2 handles effortful mental activities like complex math." } },
+          { "id": "psy-002", "type": "book_concept", "topic": "Psychology", "source": { "title": "Influence", "author": "Robert B. Cialdini", "isbn": "9780061241895" }, "theme": "Persuasion", "title": "Rule of Reciprocation", "summary": "Humans are wired to try to repay, in kind, what another person has provided us. This sense of future obligation is a powerful tool for influence.", "takeaway": "Be wary of uninvited favours. Separate the favour from the decision-making process.", "reflectionQuestion": "Have you bought something just because you were given a free sample?", "estimatedMinutes": 2, "quiz": { "question": "Why do free samples increase sales?", "options": ["They taste better", "People feel obligated to reciprocate", "They make people hungry", "Lower price"], "answer": 1, "explanation": "The rule triggers a feeling of indebtedness." } },
+          { "id": "psy-003", "type": "book_concept", "topic": "Psychology", "source": { "title": "Atomic Habits", "author": "James Clear", "isbn": "9780735211292" }, "theme": "Habit Formation", "title": "Identity-Based Habits", "summary": "True behaviour change is identity change. You might start a habit because of motivation, but you'll stick with it because it becomes part of who you are. Instead of saying 'I'm trying to quit smoking', say 'I'm not a smoker'.", "takeaway": "Every action is a vote for the type of person you wish to become.", "reflectionQuestion": "What identity are your current daily habits voting for?", "estimatedMinutes": 1, "quiz": { "question": "According to Clear, what is the most effective level to change a habit?", "options": ["Outcomes", "Processes", "Identity", "Environment"], "answer": 2, "explanation": "Identity change shifts how you view yourself." } },
+          { "id": "psy-004", "type": "book_concept", "topic": "Psychology", "source": { "title": "Man's Search for Meaning", "author": "Viktor E. Frankl", "isbn": "9780807014295" }, "theme": "Meaning", "title": "Stimulus and Response", "summary": "Between stimulus and response, there is a space. In that space is our power to choose our response. In our response lies our growth and our freedom.", "takeaway": "You cannot always control what happens, but you control how you react.", "reflectionQuestion": "How can you widen the space between trigger and reaction today?", "estimatedMinutes": 3, "quiz": { "question": "What lies in the 'space' between stimulus and response?", "options": ["Anxiety", "Power to choose", "Meaninglessness", "Habit"], "answer": 1, "explanation": "That space gives us the freedom to choose our reaction." } },
+          { "id": "psy-005", "type": "book_concept", "topic": "Psychology", "source": { "title": "Predictably Irrational", "author": "Dan Ariely", "isbn": "9780061353246" }, "theme": "Decision Making", "title": "The Decoy Effect", "summary": "Consumers tend to change preference between two options when presented with a third option that is asymmetrically dominated. A useless 'Print only' option makes the combo look like a steal.", "takeaway": "Evaluate options in isolation to avoid being manipulated by a comparison point.", "reflectionQuestion": "Have you bought a 'premium' tier because the middle tier looked bad?", "estimatedMinutes": 2, "quiz": { "question": "What is the purpose of a 'decoy' pricing option?", "options": ["Purchase frequently", "Make another option look better", "Confuse buyer", "Budget alternative"], "answer": 1, "explanation": "It's intentionally a bad deal to make the target look like a bargain." } }
         ];
 
-        /* ==========================================================================
-           LOGIC & ENGINES
-           ========================================================================== */
         const Store = {
             data: CONTENT_LIBRARY,
             likes: JSON.parse(localStorage.getItem('lumin_likes')) || [],
             notes: JSON.parse(localStorage.getItem('lumin_notes')) || [],
-
             init() { this.notify(); },
-
             toggleLike(id) {
                 if (this.likes.includes(id)) { this.likes = this.likes.filter(itemId => itemId !== id); } 
                 else { this.likes.push(id); }
                 this.save('lumin_likes', this.likes);
             },
-
             addNote(itemId, text) {
                 if (!text.trim()) return;
                 this.notes.push({ id: 'note_' + Date.now(), itemId: itemId, text: text, date: new Date().toISOString() });
                 this.save('lumin_notes', this.notes);
             },
-
-            save(key, payload) {
-                localStorage.setItem(key, JSON.stringify(payload));
-                this.notify();
-            },
-
+            save(key, payload) { localStorage.setItem(key, JSON.stringify(payload)); this.notify(); },
             notify() { window.dispatchEvent(new CustomEvent('store-updated')); },
-            
             resetAll() {
-                if(confirm("Are you sure? This will delete all your notes, likes, and saves forever.")) {
-                    localStorage.clear(); location.reload();
-                }
+                if(confirm("Are you sure? This deletes all your notes, likes, and saves.")) { localStorage.clear(); location.reload(); }
+            }
+        };
+
+        const Utils = {
+            openSheet(id) {
+                const sheet = document.getElementById(id);
+                sheet.classList.remove('hidden');
+                setTimeout(() => sheet.classList.add('open'), 10);
+                document.body.classList.add('modal-open');
+            },
+            closeSheet(id) {
+                const sheet = document.getElementById(id);
+                sheet.classList.remove('open');
+                setTimeout(() => sheet.classList.add('hidden'), 300);
+                document.body.classList.remove('modal-open');
             }
         };
 
@@ -360,7 +403,6 @@
             render() {
                 const container = document.getElementById('feed-container');
                 container.innerHTML = '';
-
                 Store.data.forEach(item => {
                     const isLiked = Store.likes.includes(item.id);
                     const coverUrl = `https://covers.openlibrary.org/b/isbn/${item.source.isbn}-L.jpg`;
@@ -374,11 +416,10 @@
                                 <img src="${coverUrl}" class="card-image" alt="${item.source.title}" onerror="this.outerHTML=&quot;${fallbackHTML}&quot;">
                             </div>
                             <div class="card-content">
-                                <span class="card-tag">${item.theme} • ${item.estimatedMinutes} min read</span>
+                                <span class="card-tag">${item.theme}</span>
                                 <h2 class="card-title">${item.title}</h2>
                                 <p class="card-summary">${item.summary}</p>
-                                <div class="card-quote">"${item.takeaway}"</div>
-                                <p style="font-size:14px; color:var(--text-secondary)">Q: ${item.reflectionQuestion}</p>
+                                <button class="secondary-btn btn-expand" data-id="${item.id}" style="width:auto; align-self:flex-start; padding: 6px 14px; font-size:14px; min-height:0; margin-top:5px;">Expand</button>
                             </div>
                             <div class="card-actions">
                                 <button class="action-btn btn-like ${isLiked ? 'liked' : ''}" data-id="${item.id}">
@@ -394,7 +435,6 @@
                     `;
                     container.appendChild(card);
                 });
-
                 this.bindEvents();
             },
 
@@ -407,43 +447,55 @@
                     });
                 });
 
-                const noteModal = document.getElementById('note-modal');
-                let currentNoteItemId = null;
+                // Expand Button Modal
+                document.querySelectorAll('.btn-expand').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const id = e.currentTarget.getAttribute('data-id');
+                        const item = Store.data.find(i => i.id === id);
+                        document.getElementById('expand-tag').innerText = item.theme;
+                        document.getElementById('expand-title').innerText = item.title;
+                        document.getElementById('expand-summary').innerText = item.summary;
+                        document.getElementById('expand-quote').innerText = `"${item.takeaway}"`;
+                        document.getElementById('expand-question').innerText = item.reflectionQuestion;
+                        Utils.openSheet('expand-modal');
+                    });
+                });
+                document.getElementById('close-expand-modal').addEventListener('click', () => Utils.closeSheet('expand-modal'));
 
+                // Note Modal
+                let currentNoteItemId = null;
                 document.querySelectorAll('.btn-note').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         currentNoteItemId = e.currentTarget.getAttribute('data-id');
                         document.getElementById('note-target-title').innerText = `Re: ${e.currentTarget.getAttribute('data-title')}`;
                         document.getElementById('note-input').value = '';
-                        noteModal.classList.remove('hidden');
-                        setTimeout(() => noteModal.classList.add('open'), 10);
-                        document.body.classList.add('modal-open');
+                        Utils.openSheet('note-modal');
                     });
                 });
-
                 document.getElementById('btn-save-note').addEventListener('click', () => {
                     Store.addNote(currentNoteItemId, document.getElementById('note-input').value);
-                    noteModal.classList.remove('open');
-                    setTimeout(() => noteModal.classList.add('hidden'), 300);
-                    document.body.classList.remove('modal-open');
+                    Utils.closeSheet('note-modal');
                 });
-
-                document.getElementById('close-note-modal').addEventListener('click', () => {
-                    noteModal.classList.remove('open');
-                    setTimeout(() => noteModal.classList.add('hidden'), 300);
-                    document.body.classList.remove('modal-open');
-                });
+                document.getElementById('close-note-modal').addEventListener('click', () => Utils.closeSheet('note-modal'));
             }
         };
 
         const MapEngine = {
             x: -1500 + window.innerWidth / 2, y: -1500 + window.innerHeight / 2, scale: 1,
             isDragging: false, startX: 0, startY: 0, initialPinchDistance: null,
+            bookNodes: {}, // Store coordinates for index jumping
             
             init() {
                 this.viewport = document.getElementById('mindmap-viewport');
                 this.canvas = document.getElementById('mindmap-canvas');
                 this.bindGestures();
+                
+                document.getElementById('btn-map-index').addEventListener('click', () => {
+                    this.populateIndex();
+                    Utils.openSheet('index-modal');
+                });
+                document.getElementById('close-index-modal').addEventListener('click', () => Utils.closeSheet('index-modal'));
+                
                 window.addEventListener('store-updated', () => this.render());
             },
 
@@ -451,14 +503,37 @@
                 this.canvas.style.transform = `translate(${this.x}px, ${this.y}px) scale(${this.scale})`;
             },
 
+            panTo(targetX, targetY, targetScale) {
+                this.canvas.classList.add('smooth-pan');
+                this.scale = targetScale;
+                this.x = -targetX + window.innerWidth / 2;
+                this.y = -targetY + window.innerHeight / 2;
+                this.updateTransform();
+                setTimeout(() => this.canvas.classList.remove('smooth-pan'), 500);
+            },
+
+            populateIndex() {
+                const list = document.getElementById('index-list');
+                list.innerHTML = '';
+                if(Object.keys(this.bookNodes).length === 0) {
+                    list.innerHTML = "<p style='color:var(--text-secondary); text-align:center;'>Add a note to a book first to see it here.</p>";
+                    return;
+                }
+                for(const [title, coords] of Object.entries(this.bookNodes)) {
+                    const div = document.createElement('div');
+                    div.className = 'list-item';
+                    div.innerHTML = `<span>${title}</span> <span style="color:var(--accent-color);">→</span>`;
+                    div.addEventListener('click', () => {
+                        Utils.closeSheet('index-modal');
+                        setTimeout(() => this.panTo(coords.x, coords.y, 1), 300);
+                    });
+                    list.appendChild(div);
+                }
+            },
+
             bindGestures() {
-                this.viewport.addEventListener('mousedown', e => {
-                    this.isDragging = true; this.startX = e.clientX - this.x; this.startY = e.clientY - this.y;
-                });
-                window.addEventListener('mousemove', e => {
-                    if (!this.isDragging) return;
-                    this.x = e.clientX - this.startX; this.y = e.clientY - this.startY; this.updateTransform();
-                });
+                this.viewport.addEventListener('mousedown', e => { this.isDragging = true; this.startX = e.clientX - this.x; this.startY = e.clientY - this.y; });
+                window.addEventListener('mousemove', e => { if (!this.isDragging) return; this.x = e.clientX - this.startX; this.y = e.clientY - this.startY; this.updateTransform(); });
                 window.addEventListener('mouseup', () => this.isDragging = false);
 
                 this.viewport.addEventListener('touchstart', e => {
@@ -475,7 +550,8 @@
                         this.x = e.touches[0].clientX - this.startX; this.y = e.touches[0].clientY - this.startY; this.updateTransform();
                     } else if (e.touches.length === 2 && this.initialPinchDistance) {
                         const currentDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-                        this.scale = Math.min(Math.max(0.3, this.scale + (currentDistance - this.initialPinchDistance) * 0.005), 2);
+                        // Reduced pinch multiplier to 0.0015 for much smoother iOS feeling
+                        this.scale = Math.min(Math.max(0.3, this.scale + (currentDistance - this.initialPinchDistance) * 0.0015), 2.5);
                         this.initialPinchDistance = currentDistance; this.updateTransform();
                     }
                 }, { passive: false });
@@ -484,12 +560,13 @@
 
                 document.getElementById('btn-zoom-in').addEventListener('click', () => { this.scale += 0.2; this.updateTransform(); });
                 document.getElementById('btn-zoom-out').addEventListener('click', () => { this.scale = Math.max(0.3, this.scale - 0.2); this.updateTransform(); });
-                document.getElementById('btn-zoom-fit').addEventListener('click', () => { this.scale = 1; this.x = -1500 + window.innerWidth / 2; this.y = -1500 + window.innerHeight / 2; this.updateTransform(); });
+                document.getElementById('btn-zoom-fit').addEventListener('click', () => { this.panTo(1500, 1500, 1); });
             },
 
             render() {
                 this.canvas.innerHTML = '<svg id="mindmap-lines"></svg>'; 
                 const svg = document.getElementById('mindmap-lines');
+                this.bookNodes = {};
                 
                 const books = {};
                 Store.data.forEach(item => {
@@ -501,24 +578,24 @@
                 const centerX = 1500, centerY = 1500;
                 let htmlNodes = `<div class="map-node node-root" style="left:${centerX}px; top:${centerY}px;">Psychology</div>`;
                 let svgLines = '';
-                const numBooks = Object.keys(books).length;
+                
+                // Get books that actually have notes
+                const activeBooks = Object.values(books).filter(b => b.items.some(i => Store.notes.some(n => n.itemId === i.id)));
+                const numBooks = activeBooks.length;
                 let bookIndex = 0;
 
-                for (const [bookTitle, bookData] of Object.entries(books)) {
-                    const hasNotes = bookData.items.some(i => Store.notes.some(n => n.itemId === i.id));
-                    if(!hasNotes) continue; 
-
+                activeBooks.forEach(bookData => {
                     const angle = (bookIndex / numBooks) * 2 * Math.PI;
-                    const bookX = centerX + Math.cos(angle) * 300;
-                    const bookY = centerY + Math.sin(angle) * 300;
+                    const bookX = centerX + Math.cos(angle) * 350;
+                    const bookY = centerY + Math.sin(angle) * 350;
+                    
+                    this.bookNodes[bookData.title] = { x: bookX, y: bookY }; // Save for index
 
                     svgLines += `<line x1="${centerX}" y1="${centerY}" x2="${bookX}" y2="${bookY}" class="map-line"/>`;
-                    htmlNodes += `<div class="map-node node-book" style="left:${bookX}px; top:${bookY}px;">${bookTitle}</div>`;
+                    htmlNodes += `<div class="map-node node-book" style="left:${bookX}px; top:${bookY}px;">${bookData.title}</div>`;
 
-                    let itemIndex = 0;
                     const itemsWithNotes = bookData.items.filter(i => Store.notes.some(n => n.itemId === i.id));
-                    
-                    itemsWithNotes.forEach(item => {
+                    itemsWithNotes.forEach((item, itemIndex) => {
                         const itemAngle = angle + ((itemIndex - itemsWithNotes.length/2) * 0.4);
                         const itemX = bookX + Math.cos(itemAngle) * 250;
                         const itemY = bookY + Math.sin(itemAngle) * 250;
@@ -535,10 +612,9 @@
                             svgLines += `<line x1="${itemX}" y1="${itemY}" x2="${noteX}" y2="${noteY}" class="map-line"/>`;
                             htmlNodes += `<div class="map-node node-note" style="left:${noteX}px; top:${noteY}px;">"${note.text}"</div>`;
                         });
-                        itemIndex++;
                     });
                     bookIndex++;
-                }
+                });
 
                 svg.innerHTML = svgLines;
                 this.canvas.insertAdjacentHTML('beforeend', htmlNodes);
@@ -547,66 +623,137 @@
         };
 
         const Study = {
-            deck: [], currentIndex: 0,
+            deck: [], currentIndex: 0, currentMode: 'flashcards',
             
             init() {
-                document.getElementById('btn-start-flashcards').addEventListener('click', () => this.startFlashcards());
-                document.getElementById('close-flashcards').addEventListener('click', () => document.getElementById('flashcard-modal').classList.add('hidden'));
+                // Populate Source dropdown dynamically
+                const sourceSelect = document.getElementById('study-source');
+                const books = [...new Set(Store.data.map(i => i.source.title))];
+                books.forEach(b => {
+                    const opt = document.createElement('option');
+                    opt.value = b; opt.innerText = b;
+                    sourceSelect.appendChild(opt);
+                });
 
+                document.getElementById('btn-start-study').addEventListener('click', () => this.startSession());
+                
+                // Exit session via Top Left Back Arrow
+                document.getElementById('close-study').addEventListener('click', () => {
+                    document.getElementById('study-modal').classList.add('hidden');
+                });
+
+                // Flashcard flips
                 const flashcard = document.getElementById('current-flashcard');
                 flashcard.addEventListener('click', () => {
                     flashcard.classList.toggle('is-flipped');
                     document.getElementById('fc-controls').classList.remove('hidden');
                 });
-
                 document.getElementById('btn-fc-missed').addEventListener('click', () => this.nextCard());
                 document.getElementById('btn-fc-knew').addEventListener('click', () => this.nextCard());
+                
+                // Quiz Next button
+                document.getElementById('btn-quiz-next').addEventListener('click', () => this.nextCard());
             },
 
-            startFlashcards() {
-                this.deck = Store.likes.length > 0 ? Store.data.filter(i => Store.likes.includes(i.id)) : Store.data;
+            startSession() {
+                const mode = document.getElementById('study-mode').value;
+                const source = document.getElementById('study-source').value;
+                const likedOnly = document.getElementById('study-liked-only').checked;
+
+                // Filter logic
+                let pool = Store.data;
+                if (likedOnly) pool = pool.filter(i => Store.likes.includes(i.id));
+                if (source !== 'all') pool = pool.filter(i => i.source.title === source);
+                
+                if (pool.length === 0) {
+                    alert("No content matches these filters. Try turning off 'Liked items only'.");
+                    return;
+                }
+
+                // Shuffle deck
+                this.deck = pool.sort(() => Math.random() - 0.5);
                 this.currentIndex = 0;
-                document.getElementById('flashcard-modal').classList.remove('hidden');
+                this.currentMode = mode;
+                
+                // Setup views
+                document.getElementById('view-flashcard').classList.add('hidden');
+                document.getElementById('view-quiz').classList.add('hidden');
+                document.getElementById(`view-${mode}`).classList.remove('hidden');
+
+                document.getElementById('study-modal').classList.remove('hidden');
                 this.loadCard();
             },
 
             loadCard() {
                 if (this.currentIndex >= this.deck.length) {
-                    alert("Deck completed! Great job.");
-                    document.getElementById('flashcard-modal').classList.add('hidden');
+                    alert("Session completed! Great job.");
+                    document.getElementById('study-modal').classList.add('hidden');
                     return;
                 }
                 const item = this.deck[this.currentIndex];
-                document.getElementById('fc-progress').innerText = `${this.currentIndex + 1} / ${this.deck.length}`;
-                document.getElementById('fc-q').innerText = item.quiz.question;
-                document.getElementById('fc-a').innerText = item.quiz.options[item.quiz.answer];
-                
-                document.getElementById('current-flashcard').classList.remove('is-flipped');
-                document.getElementById('fc-controls').classList.add('hidden');
+                document.getElementById('study-progress').innerText = `${this.currentIndex + 1} / ${this.deck.length}`;
+
+                if (this.currentMode === 'flashcards') {
+                    document.getElementById('fc-q').innerText = item.quiz.question;
+                    document.getElementById('fc-a').innerText = item.quiz.options[item.quiz.answer];
+                    document.getElementById('current-flashcard').classList.remove('is-flipped');
+                    document.getElementById('fc-controls').classList.add('hidden');
+                } else if (this.currentMode === 'quiz') {
+                    document.getElementById('quiz-q').innerText = item.quiz.question;
+                    const optionsContainer = document.getElementById('quiz-options');
+                    optionsContainer.innerHTML = '';
+                    document.getElementById('quiz-feedback').innerText = '';
+                    document.getElementById('btn-quiz-next').classList.add('hidden');
+                    
+                    item.quiz.options.forEach((optText, index) => {
+                        const btn = document.createElement('button');
+                        btn.className = 'quiz-option';
+                        btn.innerText = optText;
+                        btn.addEventListener('click', () => this.handleQuizAnswer(btn, index, item));
+                        optionsContainer.appendChild(btn);
+                    });
+                }
             },
+            
+            handleQuizAnswer(btn, selectedIndex, item) {
+                // Disable all buttons
+                const buttons = document.getElementById('quiz-options').querySelectorAll('button');
+                buttons.forEach(b => b.disabled = true);
+                
+                if (selectedIndex === item.quiz.answer) {
+                    btn.classList.add('correct');
+                    document.getElementById('quiz-feedback').innerText = "Correct! " + item.quiz.explanation;
+                    document.getElementById('quiz-feedback').style.color = "var(--success-color)";
+                } else {
+                    btn.classList.add('wrong');
+                    buttons[item.quiz.answer].classList.add('correct');
+                    document.getElementById('quiz-feedback').innerText = "Incorrect. " + item.quiz.explanation;
+                    document.getElementById('quiz-feedback').style.color = "var(--danger-color)";
+                }
+                document.getElementById('btn-quiz-next').classList.remove('hidden');
+            },
+
             nextCard() { this.currentIndex++; this.loadCard(); }
         };
 
         const Profile = {
-            init() {
-                document.getElementById('btn-reset-data').addEventListener('click', () => Store.resetAll());
-                document.getElementById('btn-export-data').addEventListener('click', () => {
-                    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(localStorage));
-                    const a = document.createElement('a');
-                    a.setAttribute("href", dataStr); a.setAttribute("download", "lumin_backup.json");
-                    document.body.appendChild(a); a.click(); a.remove();
-                });
-            },
             render() {
                 document.getElementById('stat-likes').innerText = Store.likes.length;
                 document.getElementById('stat-notes').innerText = Store.notes.length;
-                document.getElementById('learn-due-count').innerText = Store.likes.length > 0 ? Store.likes.length : Store.data.length;
             }
         };
 
         window.addEventListener('DOMContentLoaded', () => {
-            UI.init(); MapEngine.init(); Study.init(); Profile.init();
+            UI.init(); MapEngine.init(); Study.init(); 
             Store.init(); Feed.render(); Profile.render(); MapEngine.render();
+            
+            document.getElementById('btn-reset-data').addEventListener('click', () => Store.resetAll());
+            document.getElementById('btn-export-data').addEventListener('click', () => {
+                const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(localStorage));
+                const a = document.createElement('a');
+                a.setAttribute("href", dataStr); a.setAttribute("download", "lumin_backup.json");
+                document.body.appendChild(a); a.click(); a.remove();
+            });
         });
     </script>
 </body>
