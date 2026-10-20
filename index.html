@@ -48,7 +48,6 @@
         .feed-card-wrapper { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; display: flex; align-items: center; justify-content: center; padding: 10px 20px; position: relative; }
         .feed-card { background: var(--surface-solid); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); width: 100%; max-width: 400px; height: 95%; display: flex; flex-direction: column; overflow: hidden; position: relative; border: 1px solid var(--border-color); }
         
-        /* Heart Animation overlay for double tap */
         .heart-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; z-index: 50; }
         .heart-overlay svg { width: 100px; height: 100px; fill: var(--danger-color); filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3)); }
         @keyframes popHeart {
@@ -69,16 +68,19 @@
         .action-btn { background: none; border: none; color: var(--text-primary); display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 60px; min-height: 44px; cursor: pointer; }
         .action-btn.liked svg { fill: var(--danger-color); stroke: var(--danger-color); }
 
-        /* MAP */
+        /* MULTI-ROOT RADIAL MAP */
         #mindmap-viewport { width: 100%; height: 100%; background: radial-gradient(circle, var(--surface-color) 10%, var(--bg-color) 100%); position: relative; touch-action: none; overflow: hidden; }
-        #mindmap-canvas { position: absolute; top: 0; left: 0; width: 3000px; height: 3000px; transform-origin: 0 0; }
+        #mindmap-canvas { position: absolute; top: 0; left: 0; width: 5000px; height: 5000px; transform-origin: 0 0; }
         .smooth-pan { transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
         #mindmap-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
         .map-line { stroke: var(--border-color); stroke-width: 2; fill: none; }
-        .map-node { position: absolute; background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 12px 16px; box-shadow: var(--shadow-sm); max-width: 250px; transform: translate(-50%, -50%); cursor: pointer; z-index: 2; font-size: 14px; text-align: center; }
-        .node-root { background: var(--accent-color); color: white; font-weight: bold; font-size: 18px; border-radius: var(--radius-lg); box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4); }
-        .node-book { border-left: 4px solid var(--accent-color); font-weight: 600; }
-        .node-note { background: rgba(255, 204, 0, 0.1); border-left: 4px solid #ffcc00; font-style: italic; }
+        
+        .map-node { position: absolute; background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px 14px; box-shadow: var(--shadow-sm); max-width: 220px; transform: translate(-50%, -50%); cursor: pointer; z-index: 2; font-size: 14px; text-align: center; line-height: 1.3; }
+        .node-root { background: var(--accent-color); color: white; font-weight: bold; font-size: 20px; border-radius: var(--radius-lg); box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4); padding: 15px 25px; }
+        .node-book { border-left: 4px solid var(--accent-color); font-weight: 600; font-size: 15px; }
+        .node-item { background: var(--bg-color); color: var(--text-primary); font-size: 13px; border-radius: var(--radius-sm); max-width: 160px; border: 1px solid rgba(60, 60, 67, 0.2); }
+        .node-note { background: rgba(255, 204, 0, 0.15); border-left: 4px solid #ffcc00; font-style: italic; font-size: 13px; max-width: 180px; }
+        
         .map-controls { position: absolute; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 10; }
         .index-control { position: absolute; top: 20px; left: 20px; z-index: 10; }
         .icon-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--surface-color); backdrop-filter: var(--glass-blur); border: 1px solid var(--border-color); color: var(--text-primary); display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: var(--shadow-sm); cursor: pointer; }
@@ -151,12 +153,10 @@
     </header>
 
     <main id="app-container">
-        <!-- TAB A: HOMESCREEN -->
         <section id="tab-home" class="tab-view active">
             <div id="feed-container" class="scroll-snap-container"></div>
         </section>
 
-        <!-- TAB B: E-LEARNING (Setup Wizard) -->
         <section id="tab-learn" class="tab-view">
             <div class="view-padding">
                 <header class="tab-header" style="margin-bottom:20px;">
@@ -177,7 +177,6 @@
                         <label>Topic</label>
                         <select id="study-topic">
                             <option value="all">All Topics</option>
-                            <!-- Dynamically populated from JSON -->
                         </select>
                     </div>
 
@@ -185,7 +184,6 @@
                         <label>Content (Book Title)</label>
                         <select id="study-source">
                             <option value="all">Shuffle All Books</option>
-                            <!-- Dynamically populated from JSON -->
                         </select>
                     </div>
 
@@ -202,7 +200,6 @@
             </div>
         </section>
 
-        <!-- TAB C: NOTEPAD -->
         <section id="tab-map" class="tab-view">
             <div id="mindmap-viewport">
                 <div class="index-control">
@@ -220,7 +217,6 @@
             </div>
         </section>
 
-        <!-- TAB D: DATA -->
         <section id="tab-data" class="tab-view">
             <div class="view-padding">
                 <header class="tab-header" style="margin-bottom:20px;">
@@ -238,7 +234,7 @@
         </section>
     </main>
 
-    <!-- FULLSCREEN MODAL: STUDY AREA -->
+    <!-- STUDY MODAL -->
     <div id="study-modal" class="fullscreen-modal hidden">
         <div class="modal-nav">
             <button id="close-study" class="back-btn">
@@ -248,7 +244,6 @@
             <span id="study-progress" style="font-weight:600; color:var(--text-secondary);">1 / 5</span>
         </div>
         
-        <!-- Flashcard View -->
         <div id="view-flashcard" class="flashcard-container hidden">
             <div class="flashcard" id="current-flashcard">
                 <div class="fc-front">
@@ -267,7 +262,6 @@
             </div>
         </div>
 
-        <!-- Quiz View -->
         <div id="view-quiz" class="flashcard-container hidden">
             <div class="quiz-card">
                 <span class="fc-label">Quiz</span>
@@ -280,8 +274,6 @@
     </div>
 
     <!-- BOTTOM SHEETS -->
-    
-    <!-- Feed Expand Content Modal -->
     <div id="expand-modal" class="bottom-sheet hidden">
         <div class="sheet-handle"></div>
         <span id="expand-tag" style="font-size:12px; font-weight:700; color:var(--accent-color); text-transform:uppercase;"></span>
@@ -292,7 +284,6 @@
         <button id="close-expand-modal" class="primary-btn">Close</button>
     </div>
 
-    <!-- Add Note Modal -->
     <div id="note-modal" class="bottom-sheet hidden">
         <div class="sheet-handle"></div>
         <h3 style="margin-bottom:10px;">Add Note</h3>
@@ -302,7 +293,6 @@
         <button id="close-note-modal" class="full-width-btn">Cancel</button>
     </div>
 
-    <!-- Map Index Modal -->
     <div id="index-modal" class="bottom-sheet hidden">
         <div class="sheet-handle"></div>
         <h3 style="margin-bottom:15px;">Jump to Book</h3>
@@ -331,21 +321,28 @@
 
     <script>
         /* ==========================================================================
-           DATA EXPANSION (Added Finance & Deepened Psychology)
+           MASSIVE EXPANDED CONTENT LIBRARY (Psychology, Finance, Engineering)
            ========================================================================== */
         const CONTENT_LIBRARY = [
           // PSYCHOLOGY
-          { "id": "psy-001", "type": "book_concept", "topic": "Psychology", "source": { "title": "Thinking, Fast and Slow", "author": "Daniel Kahneman", "isbn": "9780374533557" }, "theme": "Cognitive Biases", "title": "System 1 vs System 2", "summary": "The brain has two operating systems. System 1 is fast, automatic, emotional, and unconscious. System 2 is slow, effortful, logical, and conscious.", "takeaway": "We substitute difficult questions with easier ones automatically. Force System 2 to engage when stakes are high.", "reflectionQuestion": "When was the last time you made a snap judgment that turned out wrong?", "estimatedMinutes": 2, "quiz": { "question": "Which system calculates 17 x 24?", "options": ["System 1", "System 2", "Limbic system", "Automatic system"], "answer": 1, "explanation": "System 2 handles effortful mental activities like complex math." } },
-          { "id": "psy-002", "type": "book_concept", "topic": "Psychology", "source": { "title": "Influence", "author": "Robert B. Cialdini", "isbn": "9780061241895" }, "theme": "Persuasion", "title": "Rule of Reciprocation", "summary": "Humans are wired to try to repay, in kind, what another person has provided us. This sense of future obligation is a powerful tool for influence.", "takeaway": "Be wary of uninvited favours. Separate the favour from the decision-making process.", "reflectionQuestion": "Have you bought something just because you were given a free sample?", "estimatedMinutes": 2, "quiz": { "question": "Why do free samples increase sales?", "options": ["They taste better", "People feel obligated to reciprocate", "They make people hungry", "Lower price"], "answer": 1, "explanation": "The rule triggers a feeling of indebtedness." } },
-          { "id": "psy-003", "type": "book_concept", "topic": "Psychology", "source": { "title": "Atomic Habits", "author": "James Clear", "isbn": "9780735211292" }, "theme": "Habit Formation", "title": "Identity-Based Habits", "summary": "True behaviour change is identity change. You might start a habit because of motivation, but you'll stick with it because it becomes part of who you are. Instead of saying 'I'm trying to quit smoking', say 'I'm not a smoker'.", "takeaway": "Every action is a vote for the type of person you wish to become.", "reflectionQuestion": "What identity are your current daily habits voting for?", "estimatedMinutes": 1, "quiz": { "question": "According to Clear, what is the most effective level to change a habit?", "options": ["Outcomes", "Processes", "Identity", "Environment"], "answer": 2, "explanation": "Identity change shifts how you view yourself." } },
-          { "id": "psy-004", "type": "book_concept", "topic": "Psychology", "source": { "title": "Man's Search for Meaning", "author": "Viktor E. Frankl", "isbn": "9780807014295" }, "theme": "Meaning", "title": "Stimulus and Response", "summary": "Between stimulus and response, there is a space. In that space is our power to choose our response. In our response lies our growth and our freedom.", "takeaway": "You cannot always control what happens, but you control how you react.", "reflectionQuestion": "How can you widen the space between trigger and reaction today?", "estimatedMinutes": 3, "quiz": { "question": "What lies in the 'space' between stimulus and response?", "options": ["Anxiety", "Power to choose", "Meaninglessness", "Habit"], "answer": 1, "explanation": "That space gives us the freedom to choose our reaction." } },
-          { "id": "psy-005", "type": "book_concept", "topic": "Psychology", "source": { "title": "Predictably Irrational", "author": "Dan Ariely", "isbn": "9780061353246" }, "theme": "Decision Making", "title": "The Decoy Effect", "summary": "Consumers tend to change preference between two options when presented with a third option that is asymmetrically dominated. A useless 'Print only' option makes the combo look like a steal.", "takeaway": "Evaluate options in isolation to avoid being manipulated by a comparison point.", "reflectionQuestion": "Have you bought a 'premium' tier because the middle tier looked bad?", "estimatedMinutes": 2, "quiz": { "question": "What is the purpose of a 'decoy' pricing option?", "options": ["Purchase frequently", "Make another option look better", "Confuse buyer", "Budget alternative"], "answer": 1, "explanation": "It's intentionally a bad deal to make the target look like a bargain." } },
-          
+          { "id": "psy-001", "type": "book_concept", "topic": "Psychology", "source": { "title": "Thinking, Fast and Slow", "author": "Daniel Kahneman", "isbn": "9780374533557" }, "theme": "Cognitive Biases", "title": "System 1 vs System 2", "summary": "The brain has two systems. System 1 is fast, automatic, emotional, and unconscious. System 2 is slow, effortful, logical, and conscious.", "takeaway": "Force System 2 to engage when stakes are high.", "reflectionQuestion": "When did you last make a snap judgment that turned out wrong?", "quiz": { "question": "Which system calculates 17 x 24?", "options": ["System 1", "System 2", "Limbic system", "Automatic system"], "answer": 1, "explanation": "System 2 handles effortful mental activities like complex math." } },
+          { "id": "psy-002", "type": "book_concept", "topic": "Psychology", "source": { "title": "Influence", "author": "Robert B. Cialdini", "isbn": "9780061241895" }, "theme": "Persuasion", "title": "Rule of Reciprocation", "summary": "Humans are wired to repay what another person provides. This sense of future obligation is a powerful tool for influence.", "takeaway": "Be wary of uninvited favours.", "reflectionQuestion": "Have you bought something just because of a free sample?", "quiz": { "question": "Why do free samples increase sales?", "options": ["Taste better", "People feel obligated", "Makes people hungry", "Lower price"], "answer": 1, "explanation": "It triggers a feeling of indebtedness." } },
+          { "id": "psy-003", "type": "book_concept", "topic": "Psychology", "source": { "title": "Atomic Habits", "author": "James Clear", "isbn": "9780735211292" }, "theme": "Habit Formation", "title": "Identity-Based Habits", "summary": "True behaviour change is identity change. You'll stick with a habit because it becomes part of who you are.", "takeaway": "Every action is a vote for the type of person you wish to become.", "reflectionQuestion": "What identity are your daily habits voting for?", "quiz": { "question": "What is the most effective level to change a habit?", "options": ["Outcomes", "Processes", "Identity", "Environment"], "answer": 2, "explanation": "Identity change shifts how you view yourself." } },
+          { "id": "psy-006", "type": "book_concept", "topic": "Psychology", "source": { "title": "The Power of Now", "author": "Eckhart Tolle", "isbn": "9781577314806" }, "theme": "Mindfulness", "title": "Clock Time vs Psychological Time", "summary": "Clock time is useful for practical scheduling. Psychological time is dwelling on past regrets or future anxieties, pulling you out of the present moment.", "takeaway": "Use clock time to plan, but drop it immediately once the plan is made.", "reflectionQuestion": "How much of your stress today is based on 'psychological time'?", "quiz": { "question": "What does Tolle define as 'Psychological Time'?", "options": ["Reading a watch", "Planning a meeting", "Dwelling on the past or future", "Time dilation in physics"], "answer": 2, "explanation": "Psychological time is mental dwelling, preventing presence." } },
+          { "id": "psy-007", "type": "book_concept", "topic": "Psychology", "source": { "title": "Meditations", "author": "Marcus Aurelius", "isbn": "9780812968255" }, "theme": "Stoicism", "title": "The Obstacle is the Way", "summary": "The mind adapts and converts any obstacle to its own purposes. The impediment to action advances action.", "takeaway": "Don't avoid resistance. Use it as fuel to grow stronger.", "reflectionQuestion": "What current obstacle can you reframe as an opportunity?", "quiz": { "question": "How does Aurelius view obstacles?", "options": ["Unlucky events", "Fuel that advances action", "Signs to quit", "Punishments from gods"], "answer": 1, "explanation": "He believed what stands in the way becomes the way." } },
+          { "id": "psy-008", "type": "book_concept", "topic": "Psychology", "source": { "title": "Meditations", "author": "Marcus Aurelius", "isbn": "9780812968255" }, "theme": "Control", "title": "Dichotomy of Control", "summary": "You have power over your mind, not outside events. Realize this, and you will find strength.", "takeaway": "Focus 100% of your energy only on what you can directly influence.", "reflectionQuestion": "Are you currently stressing over something entirely outside your control?", "quiz": { "question": "According to Stoicism, what do you have absolute power over?", "options": ["The economy", "Other people's opinions", "Your own mind and reactions", "Your health"], "answer": 2, "explanation": "You only control your internal reactions and choices." } },
+
           // FINANCE
-          { "id": "fin-001", "type": "book_concept", "topic": "Finance", "source": { "title": "The Psychology of Money", "author": "Morgan Housel", "isbn": "9780857197689" }, "theme": "Wealth Building", "title": "Wealth is What You Don't See", "summary": "Spending money to show people how much money you have is the fastest way to have less money. Wealth is financial assets that haven't yet been converted into the stuff you see.", "takeaway": "Rich is a current income. Wealth is a hidden asset that provides future optionality.", "reflectionQuestion": "Are you buying things to build wealth, or just to look rich?", "estimatedMinutes": 2, "quiz": { "question": "What is the difference between 'Rich' and 'Wealthy'?", "options": ["They are the same", "Rich is hidden, Wealth is visible", "Rich is current income, Wealth is unspent assets", "Wealth only applies to real estate"], "answer": 2, "explanation": "Wealth provides freedom and options, while 'rich' just means you have high current cash flow." } },
-          { "id": "fin-002", "type": "book_concept", "topic": "Finance", "source": { "title": "The Psychology of Money", "author": "Morgan Housel", "isbn": "9780857197689" }, "theme": "Compounding", "title": "The Power of Time", "summary": "Warren Buffett’s skill is investing, but his secret is time. 81.5 billion of his 84.5 billion net worth came after his 65th birthday. Compounding only works if you give an asset years to grow.", "takeaway": "Good investing isn't necessarily about earning the highest returns, it's about earning pretty good returns that you can stick with for a long time.", "reflectionQuestion": "Are your investments set up so you can leave them untouched for 10+ years?", "estimatedMinutes": 2, "quiz": { "question": "According to Housel, what is Warren Buffett's true secret?", "options": ["Insider trading", "Time (compounding)", "High-risk day trading", "Real estate"], "answer": 1, "explanation": "The vast majority of his wealth came in late life due to uninterrupted compounding." } },
-          { "id": "fin-003", "type": "book_concept", "topic": "Finance", "source": { "title": "Rich Dad Poor Dad", "author": "Robert T. Kiyosaki", "isbn": "9781612681139" }, "theme": "Cash Flow", "title": "Assets vs. Liabilities", "summary": "An asset puts money in your pocket. A liability takes money out of your pocket. The rich buy assets; the middle class buy liabilities they think are assets.", "takeaway": "Your house is not an asset if it only costs you money. Focus on acquiring cash-flowing assets first.", "reflectionQuestion": "List your three biggest purchases last year. Were they assets or liabilities?", "estimatedMinutes": 2, "quiz": { "question": "How does Rich Dad define a liability?", "options": ["Something you own", "Something that takes money out of your pocket", "A bank loan only", "Your personal car"], "answer": 1, "explanation": "The strict definition is cash flow: if it costs you money to hold, it's a liability." } },
-          { "id": "fin-004", "type": "book_concept", "topic": "Finance", "source": { "title": "The Intelligent Investor", "author": "Benjamin Graham", "isbn": "9780060555665" }, "theme": "Investing", "title": "Mr. Market", "summary": "Imagine a manic-depressive partner named Mr. Market who offers to buy or sell stocks to you every day. His moods don't dictate the true value of the business, only the price he's willing to transact at today.", "takeaway": "Use market volatility to your advantage. Don't let Mr. Market's mood swings dictate your own.", "reflectionQuestion": "When the stock market drops 10%, do you feel panic, or do you see a sale?", "estimatedMinutes": 3, "quiz": { "question": "What does 'Mr. Market' represent?", "options": ["The Federal Reserve", "The irrational emotional swings of the stock market", "A specific broker", "The true value of a company"], "answer": 1, "explanation": "Mr. Market is a metaphor for the erratic emotional pricing of the stock market." } }
+          { "id": "fin-001", "type": "book_concept", "topic": "Finance", "source": { "title": "The Psychology of Money", "author": "Morgan Housel", "isbn": "9780857197689" }, "theme": "Wealth Building", "title": "Wealth is What You Don't See", "summary": "Spending money to show people how much money you have is the fastest way to have less money.", "takeaway": "Rich is a current income. Wealth is a hidden asset that provides future optionality.", "reflectionQuestion": "Are you buying things to build wealth, or just to look rich?", "quiz": { "question": "What is the difference between 'Rich' and 'Wealthy'?", "options": ["They are the same", "Rich is hidden, Wealth is visible", "Rich is current income, Wealth is unspent assets", "Wealth only applies to real estate"], "answer": 2, "explanation": "Wealth provides freedom and options; 'rich' means high current cash flow." } },
+          { "id": "fin-002", "type": "book_concept", "topic": "Finance", "source": { "title": "The Psychology of Money", "author": "Morgan Housel", "isbn": "9780857197689" }, "theme": "Compounding", "title": "The Power of Time", "summary": "Warren Buffett’s skill is investing, but his secret is time. 81.5B of his 84.5B net worth came after his 65th birthday.", "takeaway": "Earn pretty good returns that you can stick with for a long time.", "reflectionQuestion": "Can your investments be left untouched for 10+ years?", "quiz": { "question": "What is Warren Buffett's true secret?", "options": ["Insider trading", "Time (compounding)", "High-risk trading", "Real estate"], "answer": 1, "explanation": "The vast majority of his wealth came late in life due to compounding." } },
+          { "id": "fin-003", "type": "book_concept", "topic": "Finance", "source": { "title": "Rich Dad Poor Dad", "author": "Robert T. Kiyosaki", "isbn": "9781612681139" }, "theme": "Cash Flow", "title": "Assets vs. Liabilities", "summary": "An asset puts money in your pocket. A liability takes money out of your pocket.", "takeaway": "Focus on acquiring cash-flowing assets first.", "reflectionQuestion": "Were your three biggest purchases last year assets or liabilities?", "quiz": { "question": "How does Rich Dad define a liability?", "options": ["Something you own", "Something that takes money out of your pocket", "A bank loan", "Your personal car"], "answer": 1, "explanation": "If it costs you money to hold, it's a liability." } },
+
+          // ENGINEERING
+          { "id": "eng-001", "type": "book_concept", "topic": "Engineering", "source": { "title": "Shigley's Mechanical Engineering Design", "author": "Richard G. Budynas", "isbn": "9780073398204" }, "theme": "Factor of Safety", "title": "Designing for Uncertainty", "summary": "The Factor of Safety (n) is a multiplier applied to the expected load to determine design capacity. It accounts for uncertainties in materials, environments, and calculations.", "takeaway": "Good engineering balances failure risk with material efficiency.", "reflectionQuestion": "Where in your work could applying a 'factor of safety' prevent catastrophic failure?", "quiz": { "question": "Why is a Factor of Safety greater than 1 necessary?", "options": ["To make manufacturing cheaper", "To account for uncertainties", "To meet aesthetic requirements", "To increase machine speed"], "answer": 1, "explanation": "It creates a buffer against unpredictable variations in stress or strength." } },
+          { "id": "eng-002", "type": "book_concept", "topic": "Engineering", "source": { "title": "Shigley's Mechanical Engineering Design", "author": "Richard G. Budynas", "isbn": "9780073398204" }, "theme": "Fatigue Failure", "title": "The S-N Curve", "summary": "Metals can fail at stresses well below their yield strength if the load is cyclic. The S-N curve plots alternating stress vs. number of cycles to failure.", "takeaway": "If a part vibrates or rotates, design for infinite life, not just static load.", "reflectionQuestion": "What systems in your life are failing due to repetitive minor stress rather than one big impact?", "quiz": { "question": "What does fatigue failure result from?", "options": ["Extreme high temperatures", "Cyclic or repetitive loading", "Chemical corrosion", "Poor surface finish only"], "answer": 1, "explanation": "Cyclic loading causes microscopic cracks to propagate over time." } },
+          { "id": "eng-003", "type": "book_concept", "topic": "Engineering", "source": { "title": "Fracture Mechanics", "author": "T.L. Anderson", "isbn": "9780849316562" }, "theme": "Stress Concentration", "title": "Stress Intensity Factor (K)", "summary": "Stress is not uniform. At the tip of a crack or a sharp internal corner, local stress multiplies exponentially, governed by the Stress Intensity Factor.", "takeaway": "Fillet your corners. Avoid sharp internal geometry where forces flow.", "reflectionQuestion": "Are there 'sharp internal corners' in your team structure causing stress points?", "quiz": { "question": "What happens to stress at a sharp internal crack tip?", "options": ["It dissipates", "It equals the nominal stress", "It approaches infinity locally", "It turns into compression"], "answer": 2, "explanation": "Theoretical stress at a perfectly sharp crack tip approaches infinity, causing propagation." } },
+          { "id": "eng-004", "type": "book_concept", "topic": "Engineering", "source": { "title": "Structures: Or Why Things Don't Fall Down", "author": "J.E. Gordon", "isbn": "9780306812835" }, "theme": "Mechanics", "title": "Stress vs Strain", "summary": "Stress is how hard the atoms are being pulled apart (Force / Area). Strain is how much the material stretches in response (Change in Length / Original Length).", "takeaway": "Hooke's Law: Strain is directly proportional to stress, until it permanently yields.", "reflectionQuestion": "How much 'strain' are you showing under your current 'stress' load?", "quiz": { "question": "What does 'Strain' measure in solid mechanics?", "options": ["Force applied", "Deformation relative to original length", "Temperature change", "Material hardness"], "answer": 1, "explanation": "Strain is the geometric deformation caused by applied stress." } },
+          { "id": "eng-005", "type": "book_concept", "topic": "Engineering", "source": { "title": "The Design of Everyday Things", "author": "Don Norman", "isbn": "9780465050659" }, "theme": "Human Factors", "title": "Affordances", "summary": "An affordance is a physical characteristic of an object that suggests how it should be used. A flat plate on a door affords pushing. A handle affords pulling.", "takeaway": "If a user needs a sign to tell them how to use your design, your design is flawed.", "reflectionQuestion": "What 'doors' are you designing that people keep pulling instead of pushing?", "quiz": { "question": "If a door has a large vertical handle, what does it 'afford'?", "options": ["Pushing", "Sliding", "Pulling", "Ignoring"], "answer": 2, "explanation": "Handles visually and physically suggest the action of pulling." } }
         ];
 
         const Store = {
@@ -395,7 +392,13 @@
                         document.querySelectorAll('.tab-view').forEach(t => t.classList.remove('active'));
                         document.getElementById(targetId).classList.add('active');
                         document.getElementById('header-title').innerText = e.currentTarget.querySelector('span').innerText;
-                        if(targetId === 'tab-map') MapEngine.render();
+                        
+                        // When opening map, ensure bounds are correct for absolute 5000x5000 size
+                        if(targetId === 'tab-map' && !MapEngine.rendered) {
+                            MapEngine.panTo(2500, 2500, 0.4); // Zoom out to see everything
+                            MapEngine.render();
+                            MapEngine.rendered = true;
+                        }
                     });
                 });
 
@@ -412,26 +415,16 @@
             }
         };
 
-        /* ==========================================================================
-           INFINITE FEED ENGINE
-           ========================================================================== */
         const Feed = {
             feedShuffled: [],
-            
             render() {
                 const container = document.getElementById('feed-container');
                 container.innerHTML = '';
-                
-                // Randomly shuffle the deck on load for dynamic sessions
                 this.feedShuffled = [...Store.data].sort(() => Math.random() - 0.5);
-                
-                // Load initial batch
                 this.appendBatch(container, this.feedShuffled);
                 
-                // Infinite Scroll Listener
                 container.addEventListener('scroll', () => {
                     if (container.scrollTop + container.clientHeight >= container.scrollHeight - 1000) {
-                        // Reshuffle and append to create the illusion of limitless content
                         const newBatch = [...Store.data].sort(() => Math.random() - 0.5);
                         this.appendBatch(container, newBatch);
                     }
@@ -447,7 +440,6 @@
                     const cardWrapper = document.createElement('div');
                     cardWrapper.className = 'feed-card-wrapper';
                     
-                    // The heart animation element
                     const heartHTML = `<div class="heart-overlay"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>`;
                     
                     cardWrapper.innerHTML = `
@@ -480,32 +472,28 @@
             },
 
             bindCardEvents(cardWrapper, item) {
-                // Double Tap to Like Logic
                 let lastTap = 0;
                 const imageContainer = cardWrapper.querySelector('.card-image-container');
                 const likeBtn = cardWrapper.querySelector('.btn-like');
                 const heartOverlay = cardWrapper.querySelector('.heart-overlay');
 
-                imageContainer.addEventListener('click', (e) => {
+                imageContainer.addEventListener('click', () => {
                     const currentTime = new Date().getTime();
                     const tapLength = currentTime - lastTap;
-                    if (tapLength < 300 && tapLength > 0) { // Double tap detected
+                    if (tapLength < 300 && tapLength > 0) { 
                         Store.toggleLike(item.id);
                         likeBtn.classList.toggle('liked');
-                        // Trigger heart pop animation
                         heartOverlay.style.animation = 'none';
                         setTimeout(() => heartOverlay.style.animation = 'popHeart 0.8s ease-out', 10);
                     }
                     lastTap = currentTime;
                 });
 
-                // Normal Like Button
                 likeBtn.addEventListener('click', () => {
                     Store.toggleLike(item.id);
                     likeBtn.classList.toggle('liked');
                 });
 
-                // Expand Button Modal
                 cardWrapper.querySelector('.btn-expand').addEventListener('click', () => {
                     document.getElementById('expand-tag').innerText = item.theme;
                     document.getElementById('expand-title').innerText = item.title;
@@ -515,7 +503,6 @@
                     Utils.openSheet('expand-modal');
                 });
 
-                // Note Modal
                 cardWrapper.querySelector('.btn-note').addEventListener('click', () => {
                     document.getElementById('note-target-title').innerText = `Re: ${item.title}`;
                     document.getElementById('note-input').value = '';
@@ -532,12 +519,12 @@
         };
 
         /* ==========================================================================
-           MIND MAP (Zoom Math Fixed)
+           RADIAL TREE MAP ENGINE
            ========================================================================== */
         const MapEngine = {
-            x: -1500 + window.innerWidth / 2, y: -1500 + window.innerHeight / 2, scale: 1,
+            x: -2500 + window.innerWidth / 2, y: -2500 + window.innerHeight / 2, scale: 0.5,
             isDragging: false, startX: 0, startY: 0, initialPinchDistance: null,
-            bookNodes: {},
+            bookNodes: {}, rendered: false,
             
             init() {
                 this.viewport = document.getElementById('mindmap-viewport');
@@ -549,16 +536,15 @@
                     Utils.openSheet('index-modal');
                 });
                 document.getElementById('close-index-modal').addEventListener('click', () => Utils.closeSheet('index-modal'));
-                window.addEventListener('store-updated', () => this.render());
+                window.addEventListener('store-updated', () => { if(this.rendered) this.render(); });
             },
 
             updateTransform() {
                 this.canvas.style.transform = `translate(${this.x}px, ${this.y}px) scale(${this.scale})`;
             },
             
-            // New mathematical zoom to target coordinates (fixes bottom-right zoom bug)
             zoomAt(delta, targetX, targetY) {
-                const newScale = Math.min(Math.max(0.3, this.scale + delta), 2.5);
+                const newScale = Math.min(Math.max(0.15, this.scale + delta), 2.5);
                 const ratio = newScale / this.scale;
                 this.x = targetX - (targetX - this.x) * ratio;
                 this.y = targetY - (targetY - this.y) * ratio;
@@ -569,8 +555,8 @@
             panTo(targetX, targetY, targetScale) {
                 this.canvas.classList.add('smooth-pan');
                 this.scale = targetScale;
-                this.x = -targetX + window.innerWidth / 2;
-                this.y = -targetY + window.innerHeight / 2;
+                this.x = -targetX * targetScale + window.innerWidth / 2;
+                this.y = -targetY * targetScale + window.innerHeight / 2;
                 this.updateTransform();
                 setTimeout(() => this.canvas.classList.remove('smooth-pan'), 500);
             },
@@ -578,17 +564,13 @@
             populateIndex() {
                 const list = document.getElementById('index-list');
                 list.innerHTML = '';
-                if(Object.keys(this.bookNodes).length === 0) {
-                    list.innerHTML = "<p style='color:var(--text-secondary); text-align:center;'>Add a note to a book first to see it here.</p>";
-                    return;
-                }
                 for(const [title, coords] of Object.entries(this.bookNodes)) {
                     const div = document.createElement('div');
                     div.className = 'list-item';
                     div.innerHTML = `<span>${title}</span> <span style="color:var(--accent-color);">→</span>`;
                     div.addEventListener('click', () => {
                         Utils.closeSheet('index-modal');
-                        setTimeout(() => this.panTo(coords.x, coords.y, 1), 300);
+                        setTimeout(() => this.panTo(coords.x, coords.y, 0.8), 300);
                     });
                     list.appendChild(div);
                 }
@@ -624,12 +606,11 @@
 
                 this.viewport.addEventListener('touchend', () => { this.isDragging = false; this.initialPinchDistance = null; });
 
-                // Button zooms target the center of the viewport
                 const vCX = window.innerWidth / 2;
                 const vCY = window.innerHeight / 2;
                 document.getElementById('btn-zoom-in').addEventListener('click', () => this.zoomAt(0.2, vCX, vCY));
                 document.getElementById('btn-zoom-out').addEventListener('click', () => this.zoomAt(-0.2, vCX, vCY));
-                document.getElementById('btn-zoom-fit').addEventListener('click', () => this.panTo(1500, 1500, 1));
+                document.getElementById('btn-zoom-fit').addEventListener('click', () => this.panTo(2500, 2500, 0.35));
             },
 
             render() {
@@ -637,51 +618,69 @@
                 const svg = document.getElementById('mindmap-lines');
                 this.bookNodes = {};
                 
-                const books = {};
+                // Group by Topic -> Book -> Items
+                const topics = {};
                 Store.data.forEach(item => {
-                    const bookTitle = item.source.title;
-                    if(!books[bookTitle]) books[bookTitle] = { title: bookTitle, items: [] };
-                    books[bookTitle].items.push(item);
+                    if (!topics[item.topic]) topics[item.topic] = {};
+                    if (!topics[item.topic][item.source.title]) topics[item.topic][item.source.title] = [];
+                    topics[item.topic][item.source.title].push(item);
                 });
 
-                const centerX = 1500, centerY = 1500;
-                let htmlNodes = `<div class="map-node node-root" style="left:${centerX}px; top:${centerY}px;">Mental Models</div>`;
+                const cx = 2500, cy = 2500;
+                let htmlNodes = '';
                 let svgLines = '';
                 
-                const activeBooks = Object.values(books).filter(b => b.items.some(i => Store.notes.some(n => n.itemId === i.id)));
-                const numBooks = activeBooks.length;
-                let bookIndex = 0;
-
-                activeBooks.forEach(bookData => {
-                    const angle = (bookIndex / numBooks) * 2 * Math.PI;
-                    const bookX = centerX + Math.cos(angle) * 350;
-                    const bookY = centerY + Math.sin(angle) * 350;
+                const topicKeys = Object.keys(topics);
+                
+                // Radial Tree Algorithm
+                topicKeys.forEach((topicName, tIdx) => {
+                    const tStartAngle = tIdx * (2 * Math.PI / topicKeys.length);
+                    const tEndAngle = (tIdx + 1) * (2 * Math.PI / topicKeys.length);
+                    const tMidAngle = (tStartAngle + tEndAngle) / 2;
                     
-                    this.bookNodes[bookData.title] = { x: bookX, y: bookY }; 
-
-                    svgLines += `<line x1="${centerX}" y1="${centerY}" x2="${bookX}" y2="${bookY}" class="map-line"/>`;
-                    htmlNodes += `<div class="map-node node-book" style="left:${bookX}px; top:${bookY}px;">${bookData.title}</div>`;
-
-                    const itemsWithNotes = bookData.items.filter(i => Store.notes.some(n => n.itemId === i.id));
-                    itemsWithNotes.forEach((item, itemIndex) => {
-                        const itemAngle = angle + ((itemIndex - itemsWithNotes.length/2) * 0.4);
-                        const itemX = bookX + Math.cos(itemAngle) * 250;
-                        const itemY = bookY + Math.sin(itemAngle) * 250;
-
-                        svgLines += `<line x1="${bookX}" y1="${bookY}" x2="${itemX}" y2="${itemY}" class="map-line"/>`;
-                        htmlNodes += `<div class="map-node" style="left:${itemX}px; top:${itemY}px;">${item.theme}</div>`;
-
-                        const itemNotes = Store.notes.filter(n => n.itemId === item.id);
-                        itemNotes.forEach((note, noteIndex) => {
-                            const noteAngle = itemAngle + ((noteIndex - itemNotes.length/2) * 0.5);
-                            const noteX = itemX + Math.cos(noteAngle) * 200;
-                            const noteY = itemY + Math.sin(noteAngle) * 200;
-
-                            svgLines += `<line x1="${itemX}" y1="${itemY}" x2="${noteX}" y2="${noteY}" class="map-line"/>`;
-                            htmlNodes += `<div class="map-node node-note" style="left:${noteX}px; top:${noteY}px;">"${note.text}"</div>`;
+                    const tx = cx + Math.cos(tMidAngle) * 400; // Topic Radius
+                    const ty = cy + Math.sin(tMidAngle) * 400;
+                    
+                    htmlNodes += `<div class="map-node node-root" style="left:${tx}px; top:${ty}px;">${topicName}</div>`;
+                    
+                    const bookKeys = Object.keys(topics[topicName]);
+                    bookKeys.forEach((bookName, bIdx) => {
+                        const bSliceWidth = (tEndAngle - tStartAngle) / bookKeys.length;
+                        const bStartAngle = tStartAngle + bIdx * bSliceWidth;
+                        const bEndAngle = tStartAngle + (bIdx + 1) * bSliceWidth;
+                        const bMidAngle = (bStartAngle + bEndAngle) / 2;
+                        
+                        const bx = cx + Math.cos(bMidAngle) * 900; // Book Radius
+                        const by = cy + Math.sin(bMidAngle) * 900;
+                        
+                        svgLines += `<line x1="${tx}" y1="${ty}" x2="${bx}" y2="${by}" class="map-line"/>`;
+                        htmlNodes += `<div class="map-node node-book" style="left:${bx}px; top:${by}px;">${bookName}</div>`;
+                        this.bookNodes[bookName] = { x: bx, y: by }; 
+                        
+                        const items = topics[topicName][bookName];
+                        items.forEach((item, iIdx) => {
+                            const iSliceWidth = (bEndAngle - bStartAngle) / items.length;
+                            const iStartAngle = bStartAngle + iIdx * iSliceWidth;
+                            const iEndAngle = bStartAngle + (iIdx + 1) * iSliceWidth;
+                            const iMidAngle = (iStartAngle + iEndAngle) / 2;
+                            
+                            const ix = cx + Math.cos(iMidAngle) * 1400; // Item Radius
+                            const iy = cy + Math.sin(iMidAngle) * 1400;
+                            
+                            svgLines += `<line x1="${bx}" y1="${by}" x2="${ix}" y2="${iy}" class="map-line"/>`;
+                            htmlNodes += `<div class="map-node node-item" style="left:${ix}px; top:${iy}px;">${item.theme}</div>`;
+                            
+                            const itemNotes = Store.notes.filter(n => n.itemId === item.id);
+                            itemNotes.forEach((note, nIdx) => {
+                                const nAngle = iMidAngle + ((nIdx - itemNotes.length/2 + 0.5) * 0.15);
+                                const nx = cx + Math.cos(nAngle) * 1800; // Note Radius
+                                const ny = cy + Math.sin(nAngle) * 1800;
+                                
+                                svgLines += `<line x1="${ix}" y1="${iy}" x2="${nx}" y2="${ny}" class="map-line"/>`;
+                                htmlNodes += `<div class="map-node node-note" style="left:${nx}px; top:${ny}px;">"${note.text}"</div>`;
+                            });
                         });
                     });
-                    bookIndex++;
                 });
 
                 svg.innerHTML = svgLines;
@@ -690,14 +689,10 @@
             }
         };
 
-        /* ==========================================================================
-           STUDY ENGINE
-           ========================================================================== */
         const Study = {
             deck: [], currentIndex: 0, currentMode: 'flashcards',
             
             init() {
-                // Populate Dropdowns dynamically
                 const topicSelect = document.getElementById('study-topic');
                 const topics = [...new Set(Store.data.map(i => i.topic))];
                 topics.forEach(t => {
@@ -714,7 +709,6 @@
                     sourceSelect.appendChild(opt);
                 });
 
-                // Attach Start Session explicitly
                 document.getElementById('btn-start-study').addEventListener('click', () => this.startSession());
                 
                 document.getElementById('close-study').addEventListener('click', () => {
@@ -737,7 +731,6 @@
                 const source = document.getElementById('study-source').value;
                 const likedOnly = document.getElementById('study-liked-only').checked;
 
-                // Build filter pool
                 let pool = Store.data;
                 if (likedOnly) pool = pool.filter(i => Store.likes.includes(i.id));
                 if (topic !== 'all') pool = pool.filter(i => i.topic === topic);
@@ -748,7 +741,6 @@
                     return;
                 }
 
-                // Shuffle deck
                 this.deck = pool.sort(() => Math.random() - 0.5);
                 this.currentIndex = 0;
                 this.currentMode = mode;
@@ -821,7 +813,7 @@
 
         window.addEventListener('DOMContentLoaded', () => {
             UI.init(); MapEngine.init(); Study.init(); 
-            Store.init(); Feed.render(); Profile.render(); MapEngine.render();
+            Store.init(); Feed.render(); Profile.render();
             
             document.getElementById('btn-reset-data').addEventListener('click', () => Store.resetAll());
             document.getElementById('btn-export-data').addEventListener('click', () => {
