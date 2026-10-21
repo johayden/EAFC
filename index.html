@@ -6,6 +6,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Lumin">
+    <meta name="theme-color" content="#f2f2f7">
     <title>Microlearning PWA</title>
 
     <style>
@@ -25,18 +26,22 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; background-color: var(--bg-color); color: var(--text-primary); overflow: hidden; user-select: none; -webkit-user-select: none; transition: background-color 0.3s ease, color 0.3s ease; }
+        html, body { height: 100%; background-color: var(--bg-color); /* Syncs iOS overscroll background */ }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text-primary); overflow: hidden; user-select: none; -webkit-user-select: none; transition: background-color 0.3s ease, color 0.3s ease; }
         button, input, select, textarea { font-family: inherit; font-size: 16px; }
 
-        .app-header { position: fixed; top: 0; left: 0; right: 0; height: calc(var(--header-height) + var(--safe-top)); padding-top: var(--safe-top); background: var(--surface-color); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--border-color); z-index: 100; }
+        .app-header { position: fixed; top: 0; left: 0; right: 0; height: calc(var(--header-height) + var(--safe-top)); padding-top: var(--safe-top); background: var(--surface-color); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--border-color); z-index: 100; transition: background 0.3s ease; }
         .header-content { display: flex; justify-content: space-between; align-items: center; height: var(--header-height); padding: 0 20px; }
         .header-content h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+        
+        .header-select { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--text-primary); border: none; background: transparent; -webkit-appearance: none; outline: none; padding-right: 22px; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='14' height='8' viewBox='0 0 14 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L7 6.5L13 1.5' stroke='%238e8e93' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right center; background-size: 14px; }
+
         #app-container { position: fixed; top: calc(var(--header-height) + var(--safe-top)); bottom: calc(var(--nav-height) + var(--safe-bottom)); left: 0; right: 0; overflow: hidden; }
         .tab-view { display: none; height: 100%; width: 100%; overflow-y: auto; -webkit-overflow-scrolling: touch; }
         .tab-view.active { display: block; animation: fadeIn 0.2s ease-out; }
         .view-padding { padding: 20px; padding-bottom: 40px; }
         
-        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--nav-height) + var(--safe-bottom)); padding-bottom: var(--safe-bottom); background: var(--surface-color); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 100; }
+        .bottom-nav { position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--nav-height) + var(--safe-bottom)); padding-bottom: var(--safe-bottom); background: var(--surface-color); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-top: 1px solid var(--border-color); display: flex; justify-content: space-around; align-items: center; z-index: 100; transition: background 0.3s ease; }
         .nav-item { background: none; border: none; color: var(--text-secondary); display: flex; flex-direction: column; align-items: center; justify-content: center; width: 60px; height: 100%; cursor: pointer; transition: color 0.2s; }
         .nav-item.active { color: var(--accent-color); }
         .nav-item svg { margin-bottom: 4px; }
@@ -50,12 +55,7 @@
         
         .heart-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; z-index: 50; }
         .heart-overlay svg { width: 100px; height: 100px; fill: var(--danger-color); filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3)); }
-        @keyframes popHeart {
-            0% { transform: translate(-50%, -50%) scale(0); opacity: 0; }
-            30% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
-            50% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-            100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; }
-        }
+        @keyframes popHeart { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 30% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; } }
 
         .card-image-container { flex: 1.2; background: var(--bg-color); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
         .card-image { width: 100%; height: 100%; object-fit: cover; }
@@ -110,15 +110,17 @@
         .quiz-option.correct { background: var(--success-color); color: white; border-color: var(--success-color); }
         .quiz-option.wrong { background: var(--danger-color); color: white; border-color: var(--danger-color); }
 
-        /* MODALS */
+        /* MODALS & SHEETS */
         .fullscreen-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 200; padding: calc(var(--safe-top) + 20px) 20px calc(var(--safe-bottom) + 20px); }
         .modal-nav { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
         .back-btn { background: none; border: none; font-size: 17px; color: var(--accent-color); font-weight: 600; display: flex; align-items: center; gap: 5px; cursor: pointer; }
         
+        .sheet-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 250; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
+        .sheet-overlay.active { opacity: 1; pointer-events: auto; }
+        
         .bottom-sheet { position: fixed; bottom: 0; left: 0; width: 100%; max-height: 85vh; overflow-y: auto; background: var(--surface-solid); border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 20px 20px calc(var(--safe-bottom) + 20px); box-shadow: 0 -10px 40px rgba(0,0,0,0.15); z-index: 300; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1); }
         .bottom-sheet.open { transform: translateY(0); }
         .sheet-handle { width: 40px; height: 5px; background: var(--border-color); border-radius: 3px; margin: 0 auto 20px; }
-        body.modal-open::after { content: ""; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 250; animation: fadeIn 0.2s; }
 
         /* UTILS */
         .hidden { display: none !important; }
@@ -143,7 +145,10 @@
 
     <header class="app-header">
         <div class="header-content">
-            <h1 id="header-title">Home</h1>
+            <h1 id="header-title" class="hidden">Lumin</h1>
+            <select id="feed-topic-filter" class="header-select">
+                <option value="all">For You (All)</option>
+            </select>
             <div class="header-actions">
                 <button id="theme-toggle" class="icon-btn" aria-label="Toggle Dark Mode">
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
@@ -273,56 +278,53 @@
         </div>
     </div>
 
+    <!-- SHEET OVERLAY FOR TAP TO CLOSE -->
+    <div id="sheet-overlay" class="sheet-overlay"></div>
+
     <!-- BOTTOM SHEETS -->
-    <div id="expand-modal" class="bottom-sheet hidden">
+    <div id="expand-modal" class="bottom-sheet hidden" data-sheet="true">
         <div class="sheet-handle"></div>
         <span id="expand-tag" style="font-size:12px; font-weight:700; color:var(--accent-color); text-transform:uppercase;"></span>
         <h2 id="expand-title" style="margin: 5px 0 15px 0;"></h2>
         <p id="expand-summary" style="line-height:1.5; margin-bottom:15px; color:var(--text-secondary);"></p>
         <div id="expand-quote" style="border-left: 3px solid var(--accent-color); padding: 12px; font-style: italic; background: rgba(0, 122, 255, 0.05); border-radius: 0 8px 8px 0; margin-bottom:15px;"></div>
         <p style="font-weight:600; margin-bottom: 20px;">Reflection: <span id="expand-question" style="font-weight:normal;"></span></p>
-        <button id="close-expand-modal" class="primary-btn">Close</button>
     </div>
 
-    <div id="note-modal" class="bottom-sheet hidden">
+    <div id="note-modal" class="bottom-sheet hidden" data-sheet="true">
         <div class="sheet-handle"></div>
         <h3 style="margin-bottom:10px;">Add Note</h3>
         <p id="note-target-title" style="margin-bottom:15px; color:var(--text-secondary);"></p>
         <textarea id="note-input" rows="4" placeholder="What are your thoughts? How can you apply this?"></textarea>
         <button id="btn-save-note" class="primary-btn">Save to Mind Map</button>
-        <button id="close-note-modal" class="full-width-btn">Cancel</button>
     </div>
 
-    <div id="index-modal" class="bottom-sheet hidden">
+    <div id="index-modal" class="bottom-sheet hidden" data-sheet="true">
         <div class="sheet-handle"></div>
         <h3 style="margin-bottom:15px;">Jump to Book</h3>
         <div id="index-list"></div>
-        <button id="close-index-modal" class="full-width-btn">Close</button>
     </div>
 
     <nav class="bottom-nav">
-        <button class="nav-item active" data-target="tab-home">
+        <button class="nav-item active" data-target="tab-home" data-title="Home">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
             <span>Feed</span>
         </button>
-        <button class="nav-item" data-target="tab-learn">
+        <button class="nav-item" data-target="tab-learn" data-title="Learn">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
             <span>Learn</span>
         </button>
-        <button class="nav-item" data-target="tab-map">
+        <button class="nav-item" data-target="tab-map" data-title="Map">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"></circle><line x1="12" y1="22" x2="12" y2="8"></line><path d="M5 12H2a10 10 0 0 0 20 0h-3"></path></svg>
             <span>Map</span>
         </button>
-        <button class="nav-item" data-target="tab-data">
+        <button class="nav-item" data-target="tab-data" data-title="Library">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             <span>Library</span>
         </button>
     </nav>
 
     <script>
-        /* ==========================================================================
-           MASSIVE EXPANDED CONTENT LIBRARY (Psychology, Finance, Engineering)
-           ========================================================================== */
         const CONTENT_LIBRARY = [
           // PSYCHOLOGY
           { "id": "psy-001", "type": "book_concept", "topic": "Psychology", "source": { "title": "Thinking, Fast and Slow", "author": "Daniel Kahneman", "isbn": "9780374533557" }, "theme": "Cognitive Biases", "title": "System 1 vs System 2", "summary": "The brain has two systems. System 1 is fast, automatic, emotional, and unconscious. System 2 is slow, effortful, logical, and conscious.", "takeaway": "Force System 2 to engage when stakes are high.", "reflectionQuestion": "When did you last make a snap judgment that turned out wrong?", "quiz": { "question": "Which system calculates 17 x 24?", "options": ["System 1", "System 2", "Limbic system", "Automatic system"], "answer": 1, "explanation": "System 2 handles effortful mental activities like complex math." } },
@@ -338,12 +340,41 @@
           { "id": "fin-003", "type": "book_concept", "topic": "Finance", "source": { "title": "Rich Dad Poor Dad", "author": "Robert T. Kiyosaki", "isbn": "9781612681139" }, "theme": "Cash Flow", "title": "Assets vs. Liabilities", "summary": "An asset puts money in your pocket. A liability takes money out of your pocket.", "takeaway": "Focus on acquiring cash-flowing assets first.", "reflectionQuestion": "Were your three biggest purchases last year assets or liabilities?", "quiz": { "question": "How does Rich Dad define a liability?", "options": ["Something you own", "Something that takes money out of your pocket", "A bank loan", "Your personal car"], "answer": 1, "explanation": "If it costs you money to hold, it's a liability." } },
 
           // ENGINEERING
-          { "id": "eng-001", "type": "book_concept", "topic": "Engineering", "source": { "title": "Shigley's Mechanical Engineering Design", "author": "Richard G. Budynas", "isbn": "9780073398204" }, "theme": "Factor of Safety", "title": "Designing for Uncertainty", "summary": "The Factor of Safety (n) is a multiplier applied to the expected load to determine design capacity. It accounts for uncertainties in materials, environments, and calculations.", "takeaway": "Good engineering balances failure risk with material efficiency.", "reflectionQuestion": "Where in your work could applying a 'factor of safety' prevent catastrophic failure?", "quiz": { "question": "Why is a Factor of Safety greater than 1 necessary?", "options": ["To make manufacturing cheaper", "To account for uncertainties", "To meet aesthetic requirements", "To increase machine speed"], "answer": 1, "explanation": "It creates a buffer against unpredictable variations in stress or strength." } },
-          { "id": "eng-002", "type": "book_concept", "topic": "Engineering", "source": { "title": "Shigley's Mechanical Engineering Design", "author": "Richard G. Budynas", "isbn": "9780073398204" }, "theme": "Fatigue Failure", "title": "The S-N Curve", "summary": "Metals can fail at stresses well below their yield strength if the load is cyclic. The S-N curve plots alternating stress vs. number of cycles to failure.", "takeaway": "If a part vibrates or rotates, design for infinite life, not just static load.", "reflectionQuestion": "What systems in your life are failing due to repetitive minor stress rather than one big impact?", "quiz": { "question": "What does fatigue failure result from?", "options": ["Extreme high temperatures", "Cyclic or repetitive loading", "Chemical corrosion", "Poor surface finish only"], "answer": 1, "explanation": "Cyclic loading causes microscopic cracks to propagate over time." } },
+          { "id": "eng-001", "type": "book_concept", "topic": "Engineering", "source": { "title": "Shigley's Mechanical Design", "author": "Richard G. Budynas", "isbn": "9780073398204" }, "theme": "Factor of Safety", "title": "Designing for Uncertainty", "summary": "The Factor of Safety (n) is a multiplier applied to the expected load to determine design capacity. It accounts for uncertainties in materials, environments, and calculations.", "takeaway": "Good engineering balances failure risk with material efficiency.", "reflectionQuestion": "Where in your work could applying a 'factor of safety' prevent catastrophic failure?", "quiz": { "question": "Why is a Factor of Safety greater than 1 necessary?", "options": ["To make manufacturing cheaper", "To account for uncertainties", "To meet aesthetic requirements", "To increase machine speed"], "answer": 1, "explanation": "It creates a buffer against unpredictable variations in stress or strength." } },
+          { "id": "eng-002", "type": "book_concept", "topic": "Engineering", "source": { "title": "Shigley's Mechanical Design", "author": "Richard G. Budynas", "isbn": "9780073398204" }, "theme": "Fatigue Failure", "title": "The S-N Curve", "summary": "Metals can fail at stresses well below their yield strength if the load is cyclic. The S-N curve plots alternating stress vs. number of cycles to failure.", "takeaway": "If a part vibrates or rotates, design for infinite life, not just static load.", "reflectionQuestion": "What systems in your life are failing due to repetitive minor stress rather than one big impact?", "quiz": { "question": "What does fatigue failure result from?", "options": ["Extreme high temperatures", "Cyclic or repetitive loading", "Chemical corrosion", "Poor surface finish only"], "answer": 1, "explanation": "Cyclic loading causes microscopic cracks to propagate over time." } },
           { "id": "eng-003", "type": "book_concept", "topic": "Engineering", "source": { "title": "Fracture Mechanics", "author": "T.L. Anderson", "isbn": "9780849316562" }, "theme": "Stress Concentration", "title": "Stress Intensity Factor (K)", "summary": "Stress is not uniform. At the tip of a crack or a sharp internal corner, local stress multiplies exponentially, governed by the Stress Intensity Factor.", "takeaway": "Fillet your corners. Avoid sharp internal geometry where forces flow.", "reflectionQuestion": "Are there 'sharp internal corners' in your team structure causing stress points?", "quiz": { "question": "What happens to stress at a sharp internal crack tip?", "options": ["It dissipates", "It equals the nominal stress", "It approaches infinity locally", "It turns into compression"], "answer": 2, "explanation": "Theoretical stress at a perfectly sharp crack tip approaches infinity, causing propagation." } },
           { "id": "eng-004", "type": "book_concept", "topic": "Engineering", "source": { "title": "Structures: Or Why Things Don't Fall Down", "author": "J.E. Gordon", "isbn": "9780306812835" }, "theme": "Mechanics", "title": "Stress vs Strain", "summary": "Stress is how hard the atoms are being pulled apart (Force / Area). Strain is how much the material stretches in response (Change in Length / Original Length).", "takeaway": "Hooke's Law: Strain is directly proportional to stress, until it permanently yields.", "reflectionQuestion": "How much 'strain' are you showing under your current 'stress' load?", "quiz": { "question": "What does 'Strain' measure in solid mechanics?", "options": ["Force applied", "Deformation relative to original length", "Temperature change", "Material hardness"], "answer": 1, "explanation": "Strain is the geometric deformation caused by applied stress." } },
           { "id": "eng-005", "type": "book_concept", "topic": "Engineering", "source": { "title": "The Design of Everyday Things", "author": "Don Norman", "isbn": "9780465050659" }, "theme": "Human Factors", "title": "Affordances", "summary": "An affordance is a physical characteristic of an object that suggests how it should be used. A flat plate on a door affords pushing. A handle affords pulling.", "takeaway": "If a user needs a sign to tell them how to use your design, your design is flawed.", "reflectionQuestion": "What 'doors' are you designing that people keep pulling instead of pushing?", "quiz": { "question": "If a door has a large vertical handle, what does it 'afford'?", "options": ["Pushing", "Sliding", "Pulling", "Ignoring"], "answer": 2, "explanation": "Handles visually and physically suggest the action of pulling." } }
         ];
+
+        /* ==========================================
+           UTILITIES
+           ========================================== */
+        const Utils = {
+            // Fisher-Yates shuffle for true TikTok-style randomness
+            shuffleArray(array) {
+                let currentIndex = array.length, randomIndex;
+                while (currentIndex !== 0) {
+                    randomIndex = Math.floor(Math.random() * currentIndex);
+                    currentIndex--;
+                    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+                }
+                return array;
+            },
+            openSheet(id) {
+                document.getElementById('sheet-overlay').classList.add('active');
+                const sheet = document.getElementById(id);
+                sheet.classList.remove('hidden');
+                setTimeout(() => sheet.classList.add('open'), 10);
+            },
+            closeAllSheets() {
+                document.getElementById('sheet-overlay').classList.remove('active');
+                document.querySelectorAll('.bottom-sheet.open').forEach(sheet => {
+                    sheet.classList.remove('open');
+                    setTimeout(() => sheet.classList.add('hidden'), 300);
+                });
+            }
+        };
 
         const Store = {
             data: CONTENT_LIBRARY,
@@ -367,68 +398,109 @@
             }
         };
 
-        const Utils = {
-            openSheet(id) {
-                const sheet = document.getElementById(id);
-                sheet.classList.remove('hidden');
-                setTimeout(() => sheet.classList.add('open'), 10);
-                document.body.classList.add('modal-open');
-            },
-            closeSheet(id) {
-                const sheet = document.getElementById(id);
-                sheet.classList.remove('open');
-                setTimeout(() => sheet.classList.add('hidden'), 300);
-                document.body.classList.remove('modal-open');
-            }
-        };
-
+        /* ==========================================
+           UI INITIALIZATION
+           ========================================== */
         const UI = {
             init() {
+                // Nav Tabbing
                 document.querySelectorAll('.nav-item').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         const targetId = e.currentTarget.getAttribute('data-target');
+                        const title = e.currentTarget.getAttribute('data-title');
+                        
                         document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
                         e.currentTarget.classList.add('active');
+                        
                         document.querySelectorAll('.tab-view').forEach(t => t.classList.remove('active'));
                         document.getElementById(targetId).classList.add('active');
-                        document.getElementById('header-title').innerText = e.currentTarget.querySelector('span').innerText;
                         
-                        // When opening map, ensure bounds are correct for absolute 5000x5000 size
+                        // Header UI switch based on context
+                        if (targetId === 'tab-home') {
+                            document.getElementById('header-title').classList.add('hidden');
+                            document.getElementById('feed-topic-filter').classList.remove('hidden');
+                        } else {
+                            document.getElementById('feed-topic-filter').classList.add('hidden');
+                            document.getElementById('header-title').classList.remove('hidden');
+                            document.getElementById('header-title').innerText = title;
+                        }
+                        
                         if(targetId === 'tab-map' && !MapEngine.rendered) {
-                            MapEngine.panTo(2500, 2500, 0.4); // Zoom out to see everything
-                            MapEngine.render();
-                            MapEngine.rendered = true;
+                            MapEngine.panTo(2500, 2500, 0.4); 
+                            MapEngine.render(); MapEngine.rendered = true;
                         }
                     });
                 });
 
+                // iOS Theme Background Sync
                 const html = document.documentElement;
+                const metaThemeColor = document.querySelector('meta[name="theme-color"]');
                 const savedTheme = localStorage.getItem('lumin_theme') || 'light';
-                html.setAttribute('data-theme', savedTheme);
+                
+                const applyTheme = (theme) => {
+                    html.setAttribute('data-theme', theme);
+                    metaThemeColor.setAttribute('content', theme === 'dark' ? '#000000' : '#f2f2f7');
+                };
+                
+                applyTheme(savedTheme);
+                
                 document.getElementById('theme-toggle').addEventListener('click', () => {
                     const next = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
-                    html.setAttribute('data-theme', next);
                     localStorage.setItem('lumin_theme', next);
+                    applyTheme(next);
                 });
+                
+                // Tap Overlay to Close Sheets
+                document.getElementById('sheet-overlay').addEventListener('click', () => Utils.closeAllSheets());
                 
                 window.addEventListener('store-updated', () => Profile.render());
             }
         };
 
+        /* ==========================================
+           FEED MODULE
+           ========================================== */
         const Feed = {
-            feedShuffled: [],
-            render() {
+            currentPool: [],
+            
+            init() {
+                // Populate Filter Dropdown
+                const filterSelect = document.getElementById('feed-topic-filter');
+                const topics = [...new Set(Store.data.map(i => i.topic))];
+                topics.forEach(t => {
+                    const opt = document.createElement('option');
+                    opt.value = t; opt.innerText = t;
+                    filterSelect.appendChild(opt);
+                });
+
+                filterSelect.addEventListener('change', (e) => {
+                    this.render(e.target.value);
+                    document.getElementById('feed-container').scrollTo(0,0);
+                });
+
+                this.render('all');
+            },
+
+            render(topicFilter) {
                 const container = document.getElementById('feed-container');
                 container.innerHTML = '';
-                this.feedShuffled = [...Store.data].sort(() => Math.random() - 0.5);
-                this.appendBatch(container, this.feedShuffled);
                 
-                container.addEventListener('scroll', () => {
+                // Filter and true shuffle
+                let pool = Store.data;
+                if (topicFilter && topicFilter !== 'all') {
+                    pool = pool.filter(item => item.topic === topicFilter);
+                }
+                
+                this.currentPool = Utils.shuffleArray([...pool]);
+                this.appendBatch(container, this.currentPool);
+                
+                // Infinite scroll cloner
+                container.onscroll = () => {
                     if (container.scrollTop + container.clientHeight >= container.scrollHeight - 1000) {
-                        const newBatch = [...Store.data].sort(() => Math.random() - 0.5);
+                        const newBatch = Utils.shuffleArray([...this.currentPool]);
                         this.appendBatch(container, newBatch);
                     }
-                });
+                };
             },
             
             appendBatch(container, batch) {
@@ -440,11 +512,9 @@
                     const cardWrapper = document.createElement('div');
                     cardWrapper.className = 'feed-card-wrapper';
                     
-                    const heartHTML = `<div class="heart-overlay"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>`;
-                    
                     cardWrapper.innerHTML = `
                         <div class="feed-card">
-                            ${heartHTML}
+                            <div class="heart-overlay"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
                             <div class="card-image-container">
                                 <img src="${coverUrl}" class="card-image" alt="${item.source.title}" onerror="this.outerHTML=&quot;${fallbackHTML}&quot;">
                             </div>
@@ -459,7 +529,7 @@
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                                     <span>Like</span>
                                 </button>
-                                <button class="action-btn btn-note" data-id="${item.id}" data-title="${item.title}">
+                                <button class="action-btn btn-note" data-id="${item.id}">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
                                     <span>Note</span>
                                 </button>
@@ -508,192 +578,24 @@
                     document.getElementById('note-input').value = '';
                     document.getElementById('btn-save-note').onclick = () => {
                         Store.addNote(item.id, document.getElementById('note-input').value);
-                        Utils.closeSheet('note-modal');
+                        Utils.closeAllSheets();
                     };
                     Utils.openSheet('note-modal');
                 });
-                
-                document.getElementById('close-expand-modal').addEventListener('click', () => Utils.closeSheet('expand-modal'));
-                document.getElementById('close-note-modal').addEventListener('click', () => Utils.closeSheet('note-modal'));
             }
         };
 
-        /* ==========================================================================
-           RADIAL TREE MAP ENGINE
-           ========================================================================== */
-        const MapEngine = {
-            x: -2500 + window.innerWidth / 2, y: -2500 + window.innerHeight / 2, scale: 0.5,
-            isDragging: false, startX: 0, startY: 0, initialPinchDistance: null,
-            bookNodes: {}, rendered: false,
-            
-            init() {
-                this.viewport = document.getElementById('mindmap-viewport');
-                this.canvas = document.getElementById('mindmap-canvas');
-                this.bindGestures();
-                
-                document.getElementById('btn-map-index').addEventListener('click', () => {
-                    this.populateIndex();
-                    Utils.openSheet('index-modal');
-                });
-                document.getElementById('close-index-modal').addEventListener('click', () => Utils.closeSheet('index-modal'));
-                window.addEventListener('store-updated', () => { if(this.rendered) this.render(); });
-            },
-
-            updateTransform() {
-                this.canvas.style.transform = `translate(${this.x}px, ${this.y}px) scale(${this.scale})`;
-            },
-            
-            zoomAt(delta, targetX, targetY) {
-                const newScale = Math.min(Math.max(0.15, this.scale + delta), 2.5);
-                const ratio = newScale / this.scale;
-                this.x = targetX - (targetX - this.x) * ratio;
-                this.y = targetY - (targetY - this.y) * ratio;
-                this.scale = newScale;
-                this.updateTransform();
-            },
-
-            panTo(targetX, targetY, targetScale) {
-                this.canvas.classList.add('smooth-pan');
-                this.scale = targetScale;
-                this.x = -targetX * targetScale + window.innerWidth / 2;
-                this.y = -targetY * targetScale + window.innerHeight / 2;
-                this.updateTransform();
-                setTimeout(() => this.canvas.classList.remove('smooth-pan'), 500);
-            },
-
-            populateIndex() {
-                const list = document.getElementById('index-list');
-                list.innerHTML = '';
-                for(const [title, coords] of Object.entries(this.bookNodes)) {
-                    const div = document.createElement('div');
-                    div.className = 'list-item';
-                    div.innerHTML = `<span>${title}</span> <span style="color:var(--accent-color);">→</span>`;
-                    div.addEventListener('click', () => {
-                        Utils.closeSheet('index-modal');
-                        setTimeout(() => this.panTo(coords.x, coords.y, 0.8), 300);
-                    });
-                    list.appendChild(div);
-                }
-            },
-
-            bindGestures() {
-                this.viewport.addEventListener('mousedown', e => { this.isDragging = true; this.startX = e.clientX - this.x; this.startY = e.clientY - this.y; });
-                window.addEventListener('mousemove', e => { if (!this.isDragging) return; this.x = e.clientX - this.startX; this.y = e.clientY - this.startY; this.updateTransform(); });
-                window.addEventListener('mouseup', () => this.isDragging = false);
-
-                this.viewport.addEventListener('touchstart', e => {
-                    if (e.touches.length === 1) {
-                        this.isDragging = true; this.startX = e.touches[0].clientX - this.x; this.startY = e.touches[0].clientY - this.y;
-                    } else if (e.touches.length === 2) {
-                        this.initialPinchDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-                    }
-                });
-
-                this.viewport.addEventListener('touchmove', e => {
-                    e.preventDefault(); 
-                    if (e.touches.length === 1 && this.isDragging) {
-                        this.x = e.touches[0].clientX - this.startX; this.y = e.touches[0].clientY - this.startY; this.updateTransform();
-                    } else if (e.touches.length === 2 && this.initialPinchDistance) {
-                        const currentDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-                        const pinchCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
-                        const pinchCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-                        
-                        const delta = (currentDistance - this.initialPinchDistance) * 0.0015;
-                        this.zoomAt(delta, pinchCenterX, pinchCenterY);
-                        this.initialPinchDistance = currentDistance;
-                    }
-                }, { passive: false });
-
-                this.viewport.addEventListener('touchend', () => { this.isDragging = false; this.initialPinchDistance = null; });
-
-                const vCX = window.innerWidth / 2;
-                const vCY = window.innerHeight / 2;
-                document.getElementById('btn-zoom-in').addEventListener('click', () => this.zoomAt(0.2, vCX, vCY));
-                document.getElementById('btn-zoom-out').addEventListener('click', () => this.zoomAt(-0.2, vCX, vCY));
-                document.getElementById('btn-zoom-fit').addEventListener('click', () => this.panTo(2500, 2500, 0.35));
-            },
-
-            render() {
-                this.canvas.innerHTML = '<svg id="mindmap-lines"></svg>'; 
-                const svg = document.getElementById('mindmap-lines');
-                this.bookNodes = {};
-                
-                // Group by Topic -> Book -> Items
-                const topics = {};
-                Store.data.forEach(item => {
-                    if (!topics[item.topic]) topics[item.topic] = {};
-                    if (!topics[item.topic][item.source.title]) topics[item.topic][item.source.title] = [];
-                    topics[item.topic][item.source.title].push(item);
-                });
-
-                const cx = 2500, cy = 2500;
-                let htmlNodes = '';
-                let svgLines = '';
-                
-                const topicKeys = Object.keys(topics);
-                
-                // Radial Tree Algorithm
-                topicKeys.forEach((topicName, tIdx) => {
-                    const tStartAngle = tIdx * (2 * Math.PI / topicKeys.length);
-                    const tEndAngle = (tIdx + 1) * (2 * Math.PI / topicKeys.length);
-                    const tMidAngle = (tStartAngle + tEndAngle) / 2;
-                    
-                    const tx = cx + Math.cos(tMidAngle) * 400; // Topic Radius
-                    const ty = cy + Math.sin(tMidAngle) * 400;
-                    
-                    htmlNodes += `<div class="map-node node-root" style="left:${tx}px; top:${ty}px;">${topicName}</div>`;
-                    
-                    const bookKeys = Object.keys(topics[topicName]);
-                    bookKeys.forEach((bookName, bIdx) => {
-                        const bSliceWidth = (tEndAngle - tStartAngle) / bookKeys.length;
-                        const bStartAngle = tStartAngle + bIdx * bSliceWidth;
-                        const bEndAngle = tStartAngle + (bIdx + 1) * bSliceWidth;
-                        const bMidAngle = (bStartAngle + bEndAngle) / 2;
-                        
-                        const bx = cx + Math.cos(bMidAngle) * 900; // Book Radius
-                        const by = cy + Math.sin(bMidAngle) * 900;
-                        
-                        svgLines += `<line x1="${tx}" y1="${ty}" x2="${bx}" y2="${by}" class="map-line"/>`;
-                        htmlNodes += `<div class="map-node node-book" style="left:${bx}px; top:${by}px;">${bookName}</div>`;
-                        this.bookNodes[bookName] = { x: bx, y: by }; 
-                        
-                        const items = topics[topicName][bookName];
-                        items.forEach((item, iIdx) => {
-                            const iSliceWidth = (bEndAngle - bStartAngle) / items.length;
-                            const iStartAngle = bStartAngle + iIdx * iSliceWidth;
-                            const iEndAngle = bStartAngle + (iIdx + 1) * iSliceWidth;
-                            const iMidAngle = (iStartAngle + iEndAngle) / 2;
-                            
-                            const ix = cx + Math.cos(iMidAngle) * 1400; // Item Radius
-                            const iy = cy + Math.sin(iMidAngle) * 1400;
-                            
-                            svgLines += `<line x1="${bx}" y1="${by}" x2="${ix}" y2="${iy}" class="map-line"/>`;
-                            htmlNodes += `<div class="map-node node-item" style="left:${ix}px; top:${iy}px;">${item.theme}</div>`;
-                            
-                            const itemNotes = Store.notes.filter(n => n.itemId === item.id);
-                            itemNotes.forEach((note, nIdx) => {
-                                const nAngle = iMidAngle + ((nIdx - itemNotes.length/2 + 0.5) * 0.15);
-                                const nx = cx + Math.cos(nAngle) * 1800; // Note Radius
-                                const ny = cy + Math.sin(nAngle) * 1800;
-                                
-                                svgLines += `<line x1="${ix}" y1="${iy}" x2="${nx}" y2="${ny}" class="map-line"/>`;
-                                htmlNodes += `<div class="map-node node-note" style="left:${nx}px; top:${ny}px;">"${note.text}"</div>`;
-                            });
-                        });
-                    });
-                });
-
-                svg.innerHTML = svgLines;
-                this.canvas.insertAdjacentHTML('beforeend', htmlNodes);
-                this.updateTransform();
-            }
-        };
-
+        /* ==========================================
+           STUDY MODULE
+           ========================================== */
         const Study = {
             deck: [], currentIndex: 0, currentMode: 'flashcards',
             
             init() {
                 const topicSelect = document.getElementById('study-topic');
+                const sourceSelect = document.getElementById('study-source');
+                
+                // Populate Topics
                 const topics = [...new Set(Store.data.map(i => i.topic))];
                 topics.forEach(t => {
                     const opt = document.createElement('option');
@@ -701,13 +603,27 @@
                     topicSelect.appendChild(opt);
                 });
 
-                const sourceSelect = document.getElementById('study-source');
-                const books = [...new Set(Store.data.map(i => i.source.title))];
-                books.forEach(b => {
-                    const opt = document.createElement('option');
-                    opt.value = b; opt.innerText = b;
-                    sourceSelect.appendChild(opt);
-                });
+                // Function to update Books based on Topic
+                const updateBooks = () => {
+                    sourceSelect.innerHTML = '<option value="all">Shuffle All Books</option>';
+                    const selectedTopic = topicSelect.value;
+                    let filteredData = Store.data;
+                    
+                    if(selectedTopic !== 'all') {
+                        filteredData = Store.data.filter(i => i.topic === selectedTopic);
+                    }
+                    
+                    const books = [...new Set(filteredData.map(i => i.source.title))];
+                    books.forEach(b => {
+                        const opt = document.createElement('option');
+                        opt.value = b; opt.innerText = b;
+                        sourceSelect.appendChild(opt);
+                    });
+                };
+                
+                // Bind Dynamic Dependency
+                topicSelect.addEventListener('change', updateBooks);
+                updateBooks(); // Initial load
 
                 document.getElementById('btn-start-study').addEventListener('click', () => this.startSession());
                 
@@ -737,11 +653,11 @@
                 if (source !== 'all') pool = pool.filter(i => i.source.title === source);
                 
                 if (pool.length === 0) {
-                    alert("No content matches these filters. Try turning off 'Liked items only' or broadening your topics.");
+                    alert("No content matches these filters.");
                     return;
                 }
 
-                this.deck = pool.sort(() => Math.random() - 0.5);
+                this.deck = Utils.shuffleArray([...pool]);
                 this.currentIndex = 0;
                 this.currentMode = mode;
                 
@@ -804,6 +720,171 @@
             nextCard() { this.currentIndex++; this.loadCard(); }
         };
 
+        /* ==========================================
+           MAP ENGINE
+           ========================================== */
+        const MapEngine = {
+            x: -2500 + window.innerWidth / 2, y: -2500 + window.innerHeight / 2, scale: 0.5,
+            isDragging: false, startX: 0, startY: 0, initialPinchDistance: null,
+            bookNodes: {}, rendered: false,
+            
+            init() {
+                this.viewport = document.getElementById('mindmap-viewport');
+                this.canvas = document.getElementById('mindmap-canvas');
+                this.bindGestures();
+                
+                document.getElementById('btn-map-index').addEventListener('click', () => {
+                    this.populateIndex();
+                    Utils.openSheet('index-modal');
+                });
+                
+                window.addEventListener('store-updated', () => { if(this.rendered) this.render(); });
+            },
+
+            updateTransform() { this.canvas.style.transform = `translate(${this.x}px, ${this.y}px) scale(${this.scale})`; },
+            
+            zoomAt(delta, targetX, targetY) {
+                const newScale = Math.min(Math.max(0.15, this.scale + delta), 2.5);
+                const ratio = newScale / this.scale;
+                this.x = targetX - (targetX - this.x) * ratio;
+                this.y = targetY - (targetY - this.y) * ratio;
+                this.scale = newScale;
+                this.updateTransform();
+            },
+
+            panTo(targetX, targetY, targetScale) {
+                this.canvas.classList.add('smooth-pan');
+                this.scale = targetScale;
+                this.x = -targetX * targetScale + window.innerWidth / 2;
+                this.y = -targetY * targetScale + window.innerHeight / 2;
+                this.updateTransform();
+                setTimeout(() => this.canvas.classList.remove('smooth-pan'), 500);
+            },
+
+            populateIndex() {
+                const list = document.getElementById('index-list');
+                list.innerHTML = '';
+                for(const [title, coords] of Object.entries(this.bookNodes)) {
+                    const div = document.createElement('div');
+                    div.className = 'list-item';
+                    div.innerHTML = `<span>${title}</span> <span style="color:var(--accent-color);">→</span>`;
+                    div.addEventListener('click', () => {
+                        Utils.closeAllSheets();
+                        setTimeout(() => this.panTo(coords.x, coords.y, 0.8), 300);
+                    });
+                    list.appendChild(div);
+                }
+            },
+
+            bindGestures() {
+                this.viewport.addEventListener('mousedown', e => { this.isDragging = true; this.startX = e.clientX - this.x; this.startY = e.clientY - this.y; });
+                window.addEventListener('mousemove', e => { if (!this.isDragging) return; this.x = e.clientX - this.startX; this.y = e.clientY - this.startY; this.updateTransform(); });
+                window.addEventListener('mouseup', () => this.isDragging = false);
+
+                this.viewport.addEventListener('touchstart', e => {
+                    if (e.touches.length === 1) {
+                        this.isDragging = true; this.startX = e.touches[0].clientX - this.x; this.startY = e.touches[0].clientY - this.y;
+                    } else if (e.touches.length === 2) {
+                        this.initialPinchDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                    }
+                });
+
+                this.viewport.addEventListener('touchmove', e => {
+                    e.preventDefault(); 
+                    if (e.touches.length === 1 && this.isDragging) {
+                        this.x = e.touches[0].clientX - this.startX; this.y = e.touches[0].clientY - this.startY; this.updateTransform();
+                    } else if (e.touches.length === 2 && this.initialPinchDistance) {
+                        const currentDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+                        const pinchCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+                        const pinchCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+                        
+                        const delta = (currentDistance - this.initialPinchDistance) * 0.0015;
+                        this.zoomAt(delta, pinchCenterX, pinchCenterY);
+                        this.initialPinchDistance = currentDistance;
+                    }
+                }, { passive: false });
+
+                this.viewport.addEventListener('touchend', () => { this.isDragging = false; this.initialPinchDistance = null; });
+
+                const vCX = window.innerWidth / 2;
+                const vCY = window.innerHeight / 2;
+                document.getElementById('btn-zoom-in').addEventListener('click', () => this.zoomAt(0.2, vCX, vCY));
+                document.getElementById('btn-zoom-out').addEventListener('click', () => this.zoomAt(-0.2, vCX, vCY));
+                document.getElementById('btn-zoom-fit').addEventListener('click', () => this.panTo(2500, 2500, 0.35));
+            },
+
+            render() {
+                this.canvas.innerHTML = '<svg id="mindmap-lines"></svg>'; 
+                const svg = document.getElementById('mindmap-lines');
+                this.bookNodes = {};
+                
+                const topics = {};
+                Store.data.forEach(item => {
+                    if (!topics[item.topic]) topics[item.topic] = {};
+                    if (!topics[item.topic][item.source.title]) topics[item.topic][item.source.title] = [];
+                    topics[item.topic][item.source.title].push(item);
+                });
+
+                const cx = 2500, cy = 2500;
+                let htmlNodes = ''; let svgLines = '';
+                const topicKeys = Object.keys(topics);
+                
+                topicKeys.forEach((topicName, tIdx) => {
+                    const tStartAngle = tIdx * (2 * Math.PI / topicKeys.length);
+                    const tEndAngle = (tIdx + 1) * (2 * Math.PI / topicKeys.length);
+                    const tMidAngle = (tStartAngle + tEndAngle) / 2;
+                    
+                    const tx = cx + Math.cos(tMidAngle) * 400; 
+                    const ty = cy + Math.sin(tMidAngle) * 400;
+                    
+                    htmlNodes += `<div class="map-node node-root" style="left:${tx}px; top:${ty}px;">${topicName}</div>`;
+                    
+                    const bookKeys = Object.keys(topics[topicName]);
+                    bookKeys.forEach((bookName, bIdx) => {
+                        const bSliceWidth = (tEndAngle - tStartAngle) / bookKeys.length;
+                        const bStartAngle = tStartAngle + bIdx * bSliceWidth;
+                        const bEndAngle = tStartAngle + (bIdx + 1) * bSliceWidth;
+                        const bMidAngle = (bStartAngle + bEndAngle) / 2;
+                        
+                        const bx = cx + Math.cos(bMidAngle) * 900; 
+                        const by = cy + Math.sin(bMidAngle) * 900;
+                        
+                        svgLines += `<line x1="${tx}" y1="${ty}" x2="${bx}" y2="${by}" class="map-line"/>`;
+                        htmlNodes += `<div class="map-node node-book" style="left:${bx}px; top:${by}px;">${bookName}</div>`;
+                        this.bookNodes[bookName] = { x: bx, y: by }; 
+                        
+                        const items = topics[topicName][bookName];
+                        items.forEach((item, iIdx) => {
+                            const iSliceWidth = (bEndAngle - bStartAngle) / items.length;
+                            const iStartAngle = bStartAngle + iIdx * iSliceWidth;
+                            const iEndAngle = bStartAngle + (iIdx + 1) * iSliceWidth;
+                            const iMidAngle = (iStartAngle + iEndAngle) / 2;
+                            
+                            const ix = cx + Math.cos(iMidAngle) * 1400; 
+                            const iy = cy + Math.sin(iMidAngle) * 1400;
+                            
+                            svgLines += `<line x1="${bx}" y1="${by}" x2="${ix}" y2="${iy}" class="map-line"/>`;
+                            htmlNodes += `<div class="map-node node-item" style="left:${ix}px; top:${iy}px;">${item.theme}</div>`;
+                            
+                            const itemNotes = Store.notes.filter(n => n.itemId === item.id);
+                            itemNotes.forEach((note, nIdx) => {
+                                const nAngle = iMidAngle + ((nIdx - itemNotes.length/2 + 0.5) * 0.15);
+                                const nx = cx + Math.cos(nAngle) * 1800;
+                                const ny = cy + Math.sin(nAngle) * 1800;
+                                
+                                svgLines += `<line x1="${ix}" y1="${iy}" x2="${nx}" y2="${ny}" class="map-line"/>`;
+                                htmlNodes += `<div class="map-node node-note" style="left:${nx}px; top:${ny}px;">"${note.text}"</div>`;
+                            });
+                        });
+                    });
+                });
+
+                svg.innerHTML = svgLines;
+                this.canvas.insertAdjacentHTML('beforeend', htmlNodes);
+                this.updateTransform();
+            }
+        };
+
         const Profile = {
             render() {
                 document.getElementById('stat-likes').innerText = Store.likes.length;
@@ -812,8 +893,7 @@
         };
 
         window.addEventListener('DOMContentLoaded', () => {
-            UI.init(); MapEngine.init(); Study.init(); 
-            Store.init(); Feed.render(); Profile.render();
+            Store.init(); UI.init(); MapEngine.init(); Study.init(); Feed.init(); Profile.render();
             
             document.getElementById('btn-reset-data').addEventListener('click', () => Store.resetAll());
             document.getElementById('btn-export-data').addEventListener('click', () => {
