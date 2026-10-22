@@ -1,12 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Lumin">
-    <meta name="theme-color" content="#f2f2f7">
+    <meta name="theme-color" content="#000000">
     <title>Microlearning PWA</title>
 
     <style>
@@ -33,7 +33,6 @@
         .app-header { position: fixed; top: 0; left: 0; right: 0; height: calc(var(--header-height) + var(--safe-top)); padding-top: var(--safe-top); background: var(--surface-color); backdrop-filter: var(--glass-blur); -webkit-backdrop-filter: var(--glass-blur); border-bottom: 1px solid var(--border-color); z-index: 100; transition: background 0.3s ease; }
         .header-content { display: flex; justify-content: space-between; align-items: center; height: var(--header-height); padding: 0 20px; }
         .header-content h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
-        
         .header-select { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; color: var(--text-primary); border: none; background: transparent; -webkit-appearance: none; outline: none; padding-right: 22px; background-image: url("data:image/svg+xml;charset=US-ASCII,%3Csvg width='14' height='8' viewBox='0 0 14 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L7 6.5L13 1.5' stroke='%238e8e93' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right center; background-size: 14px; }
 
         #app-container { position: fixed; top: calc(var(--header-height) + var(--safe-top)); bottom: calc(var(--nav-height) + var(--safe-bottom)); left: 0; right: 0; overflow: hidden; }
@@ -47,45 +46,49 @@
         .nav-item svg { margin-bottom: 4px; }
         .nav-item span { font-size: 10px; font-weight: 600; }
 
-        /* FEED & DOUBLE TAP HEART */
-        .scroll-snap-container { height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scrollbar-width: none; }
+        /* INSTAGRAM-STYLE REELS FEED */
+        .scroll-snap-container { height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-behavior: smooth; scrollbar-width: none; background: var(--bg-color); }
         .scroll-snap-container::-webkit-scrollbar { display: none; }
-        .feed-card-wrapper { height: 100%; width: 100%; scroll-snap-align: start; scroll-snap-stop: always; display: flex; align-items: center; justify-content: center; padding: 10px 20px; position: relative; }
-        .feed-card { background: var(--surface-solid); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); width: 100%; max-width: 400px; height: 95%; display: flex; flex-direction: column; overflow: hidden; position: relative; border: 1px solid var(--border-color); }
+        .feed-card-wrapper { height: 100%; width: 100%; scroll-snap-align: center; scroll-snap-stop: always; display: flex; align-items: center; justify-content: center; position: relative; }
         
+        /* Addictive smooth scaling animation */
+        .feed-card { 
+            width: 100%; height: 100%; position: relative; overflow: hidden; background: #000; color: #fff;
+            transform: scale(0.92); opacity: 0.6; border-radius: 0;
+            transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s ease;
+        }
+        .feed-card.in-view { transform: scale(1); opacity: 1; border-radius: var(--radius-md); box-shadow: var(--shadow-lg); height: 98%; width: 96%; }
+
+        .card-image-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        .card-image { width: 100%; height: 100%; object-fit: cover; opacity: 0.9; }
+        .card-image-container::after {
+            content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 70%;
+            background: linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.6) 40%, transparent 100%); z-index: 2;
+        }
+
+        /* Topic Gradients */
+        .grad-psychology { background: linear-gradient(135deg, #432b5e, #c074b2); }
+        .grad-philosophy { background: linear-gradient(135deg, #093028, #237a57); }
+        .grad-finance { background: linear-gradient(135deg, #1f4037, #99f2c8); color: #000 !important; }
+        .grad-engineering { background: linear-gradient(135deg, #4b1248, #f0c27b); }
+
+        .card-content { position: absolute; bottom: 0; left: 0; right: 70px; padding: 25px 20px; z-index: 3; display: flex; flex-direction: column; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+        .card-tag { font-size: 13px; font-weight: 800; color: #fff; background: rgba(255,255,255,0.2); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); padding: 6px 12px; border-radius: 20px; align-self: flex-start; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+        .card-title { font-size: 26px; font-weight: 800; line-height: 1.1; margin-bottom: 12px; }
+        .card-summary { font-size: 16px; line-height: 1.5; color: rgba(255,255,255,0.85); margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
+        
+        /* Right sidebar actions */
+        .card-actions { position: absolute; bottom: 30px; right: 10px; z-index: 3; display: flex; flex-direction: column; gap: 25px; align-items: center; width: 60px; }
+        .action-btn { background: none; border: none; color: #fff; display: flex; flex-direction: column; align-items: center; gap: 6px; cursor: pointer; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5)); transition: transform 0.1s; }
+        .action-btn:active { transform: scale(0.9); }
+        .action-btn span { font-size: 12px; font-weight: 600; }
+        .action-btn.liked svg { fill: var(--danger-color); stroke: var(--danger-color); filter: drop-shadow(0 0 10px rgba(255,59,48,0.6)); }
+
         .heart-overlay { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) scale(0); opacity: 0; pointer-events: none; z-index: 50; }
-        .heart-overlay svg { width: 100px; height: 100px; fill: var(--danger-color); filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3)); }
-        @keyframes popHeart { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 30% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.5); opacity: 0; } }
+        .heart-overlay svg { width: 120px; height: 120px; fill: var(--danger-color); filter: drop-shadow(0 4px 20px rgba(0,0,0,0.5)); }
+        @keyframes popHeart { 0% { transform: translate(-50%, -50%) scale(0); opacity: 0; } 30% { transform: translate(-50%, -50%) scale(1.3); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(1); opacity: 1; } 100% { transform: translate(-50%, -50%) scale(1.6); opacity: 0; } }
 
-        .card-image-container { flex: 1.2; background: var(--bg-color); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative; }
-        .card-image { width: 100%; height: 100%; object-fit: cover; }
-        .image-fallback { padding: 20px; text-align: center; background: linear-gradient(135deg, var(--surface-solid), var(--border-color)); width: 100%; height: 100%; display: flex; flex-direction: column; justify-content: center; }
-        .card-content { padding: 20px; flex: 1; display: flex; flex-direction: column; overflow: hidden; justify-content: center; }
-        .card-tag { font-size: 11px; font-weight: 700; color: var(--accent-color); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-        .card-title { font-size: 22px; font-weight: 700; line-height: 1.1; margin-bottom: 10px; }
-        .card-summary { font-size: 15px; line-height: 1.4; color: var(--text-secondary); margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
-        .card-actions { display: flex; justify-content: space-around; padding: 12px 20px; background: var(--surface-solid); border-top: 1px solid var(--border-color); }
-        .action-btn { background: none; border: none; color: var(--text-primary); display: flex; flex-direction: column; align-items: center; gap: 4px; min-width: 60px; min-height: 44px; cursor: pointer; }
-        .action-btn.liked svg { fill: var(--danger-color); stroke: var(--danger-color); }
-
-        /* MULTI-ROOT RADIAL MAP */
-        #mindmap-viewport { width: 100%; height: 100%; background: radial-gradient(circle, var(--surface-color) 10%, var(--bg-color) 100%); position: relative; touch-action: none; overflow: hidden; }
-        #mindmap-canvas { position: absolute; top: 0; left: 0; width: 5000px; height: 5000px; transform-origin: 0 0; }
-        .smooth-pan { transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
-        #mindmap-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
-        .map-line { stroke: var(--border-color); stroke-width: 2; fill: none; }
-        
-        .map-node { position: absolute; background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px 14px; box-shadow: var(--shadow-sm); max-width: 220px; transform: translate(-50%, -50%); cursor: pointer; z-index: 2; font-size: 14px; text-align: center; line-height: 1.3; }
-        .node-root { background: var(--accent-color); color: white; font-weight: bold; font-size: 20px; border-radius: var(--radius-lg); box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4); padding: 15px 25px; }
-        .node-book { border-left: 4px solid var(--accent-color); font-weight: 600; font-size: 15px; }
-        .node-item { background: var(--bg-color); color: var(--text-primary); font-size: 13px; border-radius: var(--radius-sm); max-width: 160px; border: 1px solid rgba(60, 60, 67, 0.2); }
-        .node-note { background: rgba(255, 204, 0, 0.15); border-left: 4px solid #ffcc00; font-style: italic; font-size: 13px; max-width: 180px; }
-        
-        .map-controls { position: absolute; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 10; }
-        .index-control { position: absolute; top: 20px; left: 20px; z-index: 10; }
-        .icon-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--surface-color); backdrop-filter: var(--glass-blur); border: 1px solid var(--border-color); color: var(--text-primary); display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: var(--shadow-sm); cursor: pointer; }
-
-        /* STUDY WORKFLOW */
+        /* QUIZLET-STYLE STUDY WORKFLOW */
         .study-setup { background: var(--surface-solid); border-radius: var(--radius-lg); padding: 24px; box-shadow: var(--shadow-sm); border: 1px solid var(--border-color); }
         .form-group { margin-bottom: 20px; text-align: left; }
         .form-group label { display: block; font-size: 12px; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px; font-weight: 600; }
@@ -99,16 +102,34 @@
         input:checked + .slider { background-color: var(--success-color); }
         input:checked + .slider:before { transform: translateX(20px); }
 
-        .flashcard-container { width: 100%; height: 60vh; perspective: 1000px; margin: 20px 0; }
+        .flashcard-container { width: 100%; height: 65vh; perspective: 1500px; margin: 20px 0; }
         .flashcard { width: 100%; height: 100%; position: relative; transition: transform 0.6s cubic-bezier(0.4, 0.2, 0.2, 1); transform-style: preserve-3d; cursor: pointer; }
         .flashcard.is-flipped { transform: rotateY(180deg); }
-        .fc-front, .fc-back, .quiz-card { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--surface-solid); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px; text-align: center; border: 1px solid var(--border-color); }
-        .fc-back { transform: rotateY(180deg); background: var(--bg-color); }
-        .fc-label { position: absolute; top: 20px; font-size: 12px; text-transform: uppercase; color: var(--text-secondary); letter-spacing: 1px; }
-        .quiz-card { justify-content: flex-start; padding-top: 50px; overflow-y: auto; }
-        .quiz-option { width: 100%; padding: 15px; margin-bottom: 10px; border: 2px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-color); color: var(--text-primary); font-weight: 600; cursor: pointer; transition: all 0.2s; }
-        .quiz-option.correct { background: var(--success-color); color: white; border-color: var(--success-color); }
-        .quiz-option.wrong { background: var(--danger-color); color: white; border-color: var(--danger-color); }
+        .fc-front, .fc-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; -webkit-backface-visibility: hidden; background: var(--surface-solid); border-radius: var(--radius-lg); box-shadow: var(--shadow-lg); display: flex; flex-direction: column; justify-content: center; padding: 30px; text-align: left; border: 1px solid var(--border-color); overflow-y: auto; }
+        .fc-back { transform: rotateY(180deg); background: var(--surface-color); }
+        
+        .fc-label { font-size: 13px; font-weight: 700; text-transform: uppercase; color: var(--accent-color); letter-spacing: 1px; margin-bottom: 10px; display: block; }
+        .fc-title { font-size: 28px; font-weight: 800; margin-bottom: 15px; line-height: 1.2; }
+        .fc-text { font-size: 18px; line-height: 1.5; color: var(--text-primary); margin-bottom: 20px; }
+        .fc-italic { font-size: 16px; font-style: italic; color: var(--text-secondary); border-left: 3px solid var(--accent-color); padding-left: 15px; margin-top: 10px; }
+
+        .fc-actions { display: flex; gap: 15px; margin-top: 20px; opacity: 0; transform: translateY(10px); transition: all 0.3s; pointer-events: none; }
+        .fc-actions.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+
+        /* RADIAL MAP */
+        #mindmap-viewport { width: 100%; height: 100%; background: radial-gradient(circle, var(--surface-color) 10%, var(--bg-color) 100%); position: relative; touch-action: none; overflow: hidden; }
+        #mindmap-canvas { position: absolute; top: 0; left: 0; width: 5000px; height: 5000px; transform-origin: 0 0; }
+        .smooth-pan { transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        #mindmap-lines { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .map-line { stroke: var(--border-color); stroke-width: 2; fill: none; }
+        .map-node { position: absolute; background: var(--surface-solid); border: 1px solid var(--border-color); border-radius: var(--radius-md); padding: 10px 14px; box-shadow: var(--shadow-sm); max-width: 220px; transform: translate(-50%, -50%); cursor: pointer; z-index: 2; font-size: 14px; text-align: center; line-height: 1.3; }
+        .node-root { background: var(--accent-color); color: white; font-weight: bold; font-size: 20px; border-radius: var(--radius-lg); box-shadow: 0 4px 15px rgba(0, 122, 255, 0.4); padding: 15px 25px; }
+        .node-book { border-left: 4px solid var(--accent-color); font-weight: 600; font-size: 15px; }
+        .node-item { background: var(--bg-color); color: var(--text-primary); font-size: 13px; border-radius: var(--radius-sm); max-width: 160px; border: 1px solid rgba(60, 60, 67, 0.2); }
+        .node-note { background: rgba(255, 204, 0, 0.15); border-left: 4px solid #ffcc00; font-style: italic; font-size: 13px; max-width: 180px; }
+        .map-controls { position: absolute; bottom: 20px; right: 20px; display: flex; flex-direction: column; gap: 10px; z-index: 10; }
+        .index-control { position: absolute; top: 20px; left: 20px; z-index: 10; }
+        .icon-btn { width: 44px; height: 44px; border-radius: 50%; background: var(--surface-color); backdrop-filter: var(--glass-blur); border: 1px solid var(--border-color); color: var(--text-primary); display: flex; align-items: center; justify-content: center; font-size: 20px; box-shadow: var(--shadow-sm); cursor: pointer; }
 
         /* MODALS & SHEETS */
         .fullscreen-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 200; padding: calc(var(--safe-top) + 20px) 20px calc(var(--safe-bottom) + 20px); }
@@ -117,7 +138,6 @@
         
         .sheet-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.4); z-index: 250; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
         .sheet-overlay.active { opacity: 1; pointer-events: auto; }
-        
         .bottom-sheet { position: fixed; bottom: 0; left: 0; width: 100%; max-height: 85vh; overflow-y: auto; background: var(--surface-solid); border-radius: var(--radius-lg) var(--radius-lg) 0 0; padding: 20px 20px calc(var(--safe-bottom) + 20px); box-shadow: 0 -10px 40px rgba(0,0,0,0.15); z-index: 300; transform: translateY(100%); transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1); }
         .bottom-sheet.open { transform: translateY(0); }
         .sheet-handle { width: 40px; height: 5px; background: var(--border-color); border-radius: 3px; margin: 0 auto 20px; }
@@ -125,19 +145,18 @@
         /* UTILS */
         .hidden { display: none !important; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .primary-btn, .secondary-btn, .danger-btn, .success-btn, .full-width-btn { padding: 14px 24px; border-radius: var(--radius-md); border: none; font-weight: 600; cursor: pointer; transition: transform 0.1s; min-height: 44px; }
-        .primary-btn:active { transform: scale(0.97); }
+        .primary-btn, .secondary-btn, .danger-btn, .success-btn, .full-width-btn { padding: 16px 24px; border-radius: var(--radius-md); border: none; font-weight: 700; cursor: pointer; transition: transform 0.1s; min-height: 50px; font-size: 16px; display: flex; align-items: center; justify-content: center; gap: 8px;}
+        .primary-btn:active, .secondary-btn:active, .danger-btn:active, .success-btn:active { transform: scale(0.96); }
         .primary-btn { background: var(--accent-color); color: white; width: 100%; }
         .secondary-btn { background: var(--border-color); color: var(--text-primary); width: 100%; }
         .danger-btn { background: var(--danger-color); color: white; width: 100%; }
         .success-btn { background: var(--success-color); color: white; width: 100%; }
         .full-width-btn { width: 100%; background: transparent; color: var(--text-secondary); margin-top: 10px; }
-        input[type="text"], textarea { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-color); color: var(--text-primary); margin-bottom: 15px; outline: none; }
+        input[type="text"], textarea { width: 100%; padding: 14px; border: 1px solid var(--border-color); border-radius: var(--radius-md); background: var(--bg-color); color: var(--text-primary); margin-bottom: 15px; outline: none; font-size: 16px; }
         .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 30px; }
         .stat-box { background: var(--surface-solid); padding: 15px; border-radius: var(--radius-md); text-align: center; border: 1px solid var(--border-color); }
         .stat-box span { display: block; font-size: 24px; font-weight: bold; color: var(--accent-color); }
-        .stat-box label { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; }
-        
+        .stat-box label { font-size: 12px; color: var(--text-secondary); text-transform: uppercase; margin-top: 5px; display: block;}
         .list-item { padding: 16px; border-bottom: 1px solid var(--border-color); font-weight: 600; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
     </style>
 </head>
@@ -147,7 +166,7 @@
         <div class="header-content">
             <h1 id="header-title" class="hidden">Lumin</h1>
             <select id="feed-topic-filter" class="header-select">
-                <option value="all">For You (All)</option>
+                <option value="all">For You</option>
             </select>
             <div class="header-actions">
                 <button id="theme-toggle" class="icon-btn" aria-label="Toggle Dark Mode">
@@ -158,53 +177,55 @@
     </header>
 
     <main id="app-container">
+        <!-- FEED -->
         <section id="tab-home" class="tab-view active">
             <div id="feed-container" class="scroll-snap-container"></div>
         </section>
 
+        <!-- LEARN (FLASHCARDS) -->
         <section id="tab-learn" class="tab-view">
             <div class="view-padding">
                 <header class="tab-header" style="margin-bottom:20px;">
                     <h2>Study Session</h2>
-                    <p style="color:var(--text-secondary);">Configure your revision workflow.</p>
+                    <p style="color:var(--text-secondary); margin-top:5px;">Reflect and reinforce concepts.</p>
                 </header>
                 
                 <div class="study-setup">
                     <div class="form-group">
                         <label>Mode</label>
                         <select id="study-mode">
-                            <option value="flashcards">Flashcards (Active Recall)</option>
-                            <option value="quiz">Multiple Choice Quiz</option>
+                            <option value="flashcards">Flashcards (Reflection & Application)</option>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label>Topic</label>
                         <select id="study-topic">
                             <option value="all">All Topics</option>
                         </select>
                     </div>
-
                     <div class="form-group">
                         <label>Content (Book Title)</label>
                         <select id="study-source">
                             <option value="all">Shuffle All Books</option>
                         </select>
                     </div>
-
                     <div class="toggle-switch">
-                        <span>Only study Liked items</span>
+                        <span>Only review Liked items</span>
                         <label class="switch">
                             <input type="checkbox" id="study-liked-only">
                             <span class="slider"></span>
                         </label>
                     </div>
                     
-                    <button id="btn-start-study" class="primary-btn" style="margin-top:20px;">Start Session</button>
+                    <button id="btn-start-study" class="primary-btn" style="margin-top:20px;">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+                        Start Session
+                    </button>
                 </div>
             </div>
         </section>
 
+        <!-- MAP -->
         <section id="tab-map" class="tab-view">
             <div id="mindmap-viewport">
                 <div class="index-control">
@@ -222,6 +243,7 @@
             </div>
         </section>
 
+        <!-- DATA / PROFILE -->
         <section id="tab-data" class="tab-view">
             <div class="view-padding">
                 <header class="tab-header" style="margin-bottom:20px;">
@@ -230,6 +252,7 @@
                 <div class="stats-grid">
                     <div class="stat-box"><span id="stat-likes">0</span><label>Liked</label></div>
                     <div class="stat-box"><span id="stat-notes">0</span><label>Notes</label></div>
+                    <div class="stat-box"><span id="stat-seen">0</span><label>Viewed</label></div>
                 </div>
                 <div style="margin-top:40px; display:flex; flex-direction:column; gap:10px;">
                     <button id="btn-export-data" class="secondary-btn">Export Backup JSON</button>
@@ -239,56 +262,48 @@
         </section>
     </main>
 
-    <!-- STUDY MODAL -->
+    <!-- STUDY MODAL (QUIZLET STYLE) -->
     <div id="study-modal" class="fullscreen-modal hidden">
         <div class="modal-nav">
             <button id="close-study" class="back-btn">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                Back
+                Exit
             </button>
             <span id="study-progress" style="font-weight:600; color:var(--text-secondary);">1 / 5</span>
         </div>
         
-        <div id="view-flashcard" class="flashcard-container hidden">
+        <div id="view-flashcard" class="flashcard-container">
             <div class="flashcard" id="current-flashcard">
-                <div class="fc-front">
-                    <span class="fc-label">Question</span>
-                    <h3 id="fc-q"></h3>
-                </div>
-                <div class="fc-back">
-                    <span class="fc-label">Answer</span>
-                    <p id="fc-a"></p>
-                </div>
+                <div class="fc-front" id="fc-front-content"></div>
+                <div class="fc-back" id="fc-back-content"></div>
             </div>
-            <p style="text-align:center; color:var(--text-secondary); margin-top:15px; font-size:14px;">Tap card to flip</p>
-            <div style="display:flex; gap:15px; margin-top:20px;" class="hidden" id="fc-controls">
-                <button id="btn-fc-missed" class="danger-btn">Review Again</button>
-                <button id="btn-fc-knew" class="success-btn">Got It</button>
-            </div>
-        </div>
-
-        <div id="view-quiz" class="flashcard-container hidden">
-            <div class="quiz-card">
-                <span class="fc-label">Quiz</span>
-                <h3 id="quiz-q" style="margin-bottom:25px;"></h3>
-                <div id="quiz-options" style="width:100%;"></div>
-                <div id="quiz-feedback" style="margin-top:20px; font-weight:600; min-height:40px;"></div>
-                <button id="btn-quiz-next" class="primary-btn hidden" style="margin-top:15px;">Next Question</button>
+            <p id="fc-hint" style="text-align:center; color:var(--text-secondary); margin-top:20px; font-size:14px; font-weight: 500;">Tap card to flip</p>
+            
+            <div class="fc-actions" id="fc-controls">
+                <button id="btn-fc-missed" class="secondary-btn" style="border: 2px solid var(--border-color);">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><polyline points="3 3 3 8 8 8"></polyline></svg>
+                    Rethink
+                </button>
+                <button id="btn-fc-knew" class="success-btn">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                    Mastered
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- SHEET OVERLAY FOR TAP TO CLOSE -->
+    <!-- SHEET OVERLAY -->
     <div id="sheet-overlay" class="sheet-overlay"></div>
 
     <!-- BOTTOM SHEETS -->
     <div id="expand-modal" class="bottom-sheet hidden" data-sheet="true">
         <div class="sheet-handle"></div>
-        <span id="expand-tag" style="font-size:12px; font-weight:700; color:var(--accent-color); text-transform:uppercase;"></span>
-        <h2 id="expand-title" style="margin: 5px 0 15px 0;"></h2>
-        <p id="expand-summary" style="line-height:1.5; margin-bottom:15px; color:var(--text-secondary);"></p>
-        <div id="expand-quote" style="border-left: 3px solid var(--accent-color); padding: 12px; font-style: italic; background: rgba(0, 122, 255, 0.05); border-radius: 0 8px 8px 0; margin-bottom:15px;"></div>
-        <p style="font-weight:600; margin-bottom: 20px;">Reflection: <span id="expand-question" style="font-weight:normal;"></span></p>
+        <span id="expand-tag" style="font-size:12px; font-weight:800; color:var(--accent-color); text-transform:uppercase; letter-spacing:1px;"></span>
+        <h2 id="expand-title" style="margin: 5px 0 15px 0; font-size: 24px;"></h2>
+        <p id="expand-summary" style="line-height:1.6; font-size: 16px; margin-bottom:20px; color:var(--text-primary);"></p>
+        <div id="expand-quote" style="border-left: 4px solid var(--accent-color); padding: 15px; font-size: 18px; font-weight: 600; background: rgba(0, 122, 255, 0.05); border-radius: 0 8px 8px 0; margin-bottom:20px;"></div>
+        <p style="font-weight:700; font-size: 14px; color:var(--text-secondary); text-transform:uppercase; letter-spacing:1px; margin-bottom: 5px;">Reflection</p>
+        <p id="expand-question" style="font-size:16px; font-style:italic; margin-bottom: 20px;"></p>
     </div>
 
     <div id="note-modal" class="bottom-sheet hidden" data-sheet="true">
@@ -311,8 +326,8 @@
             <span>Feed</span>
         </button>
         <button class="nav-item" data-target="tab-learn" data-title="Learn">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"></path><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"></path></svg>
-            <span>Learn</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><line x1="3" y1="9" x2="21" y2="9"></line><line x1="9" y1="21" x2="9" y2="9"></line></svg>
+            <span>Study</span>
         </button>
         <button class="nav-item" data-target="tab-map" data-title="Map">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="5" r="3"></circle><line x1="12" y1="22" x2="12" y2="8"></line><path d="M5 12H2a10 10 0 0 0 20 0h-3"></path></svg>
@@ -327,29 +342,27 @@
     <script>
         const CONTENT_LIBRARY = [
           // PSYCHOLOGY
-          { "id": "psy-001", "type": "book_concept", "topic": "Psychology", "source": { "title": "Thinking, Fast and Slow", "author": "Daniel Kahneman", "isbn": "9780374533557" }, "theme": "Cognitive Biases", "title": "System 1 vs System 2", "summary": "The brain has two systems. System 1 is fast, automatic, emotional, and unconscious. System 2 is slow, effortful, logical, and conscious.", "takeaway": "Force System 2 to engage when stakes are high.", "reflectionQuestion": "When did you last make a snap judgment that turned out wrong?", "quiz": { "question": "Which system calculates 17 x 24?", "options": ["System 1", "System 2", "Limbic system", "Automatic system"], "answer": 1, "explanation": "System 2 handles effortful mental activities like complex math." } },
-          { "id": "psy-002", "type": "book_concept", "topic": "Psychology", "source": { "title": "Influence", "author": "Robert B. Cialdini", "isbn": "9780061241895" }, "theme": "Persuasion", "title": "Rule of Reciprocation", "summary": "Humans are wired to repay what another person provides. This sense of future obligation is a powerful tool for influence.", "takeaway": "Be wary of uninvited favours.", "reflectionQuestion": "Have you bought something just because of a free sample?", "quiz": { "question": "Why do free samples increase sales?", "options": ["Taste better", "People feel obligated", "Makes people hungry", "Lower price"], "answer": 1, "explanation": "It triggers a feeling of indebtedness." } },
-          { "id": "psy-003", "type": "book_concept", "topic": "Psychology", "source": { "title": "Atomic Habits", "author": "James Clear", "isbn": "9780735211292" }, "theme": "Habit Formation", "title": "Identity-Based Habits", "summary": "True behaviour change is identity change. You'll stick with a habit because it becomes part of who you are.", "takeaway": "Every action is a vote for the type of person you wish to become.", "reflectionQuestion": "What identity are your daily habits voting for?", "quiz": { "question": "What is the most effective level to change a habit?", "options": ["Outcomes", "Processes", "Identity", "Environment"], "answer": 2, "explanation": "Identity change shifts how you view yourself." } },
-          { "id": "psy-004", "type": "book_concept", "topic": "Psychology", "source": { "title": "The 7 Habits of Highly Effective People", "author": "Stephen R. Covey", "isbn": "9781451639612" }, "theme": "Proactivity", "title": "Circle of Influence", "summary": "Proactive people focus their efforts on their Circle of Influence—things they can control. Reactive people focus on the Circle of Concern—things they cannot control, leading to victimization and stress.", "takeaway": "Expand your influence by focusing only on what you can actually control.", "reflectionQuestion": "Are you currently stressing over your Circle of Concern or working on your Circle of Influence?", "quiz": { "question": "What do proactive people focus their energy on?", "options": ["The Circle of Concern", "Other people's actions", "The Circle of Influence", "Past mistakes"], "answer": 2, "explanation": "The Circle of Influence contains things you can directly control or impact." } },
-          { "id": "psy-005", "type": "book_concept", "topic": "Psychology", "source": { "title": "The 5AM Club", "author": "Robin Sharma", "isbn": "9781443456623" }, "theme": "Routine", "title": "The 20/20/20 Formula", "summary": "The first hour of your day should be divided into three 20-minute blocks: move (exercise), reflect (meditate/journal), and grow (learn/read). This primes your brain and body for peak performance.", "takeaway": "Own your morning to elevate your life.", "reflectionQuestion": "How do you currently spend the first 60 minutes of your day?", "quiz": { "question": "What are the three 20-minute blocks in the 20/20/20 formula?", "options": ["Eat, Sleep, Work", "Move, Reflect, Grow", "Read, Write, Speak", "Run, Lift, Stretch"], "answer": 1, "explanation": "The routine focuses on physical, mental, and personal growth to start the day." } },
+          { "id": "psy-001", "type": "book_concept", "topic": "Psychology", "source": { "title": "Thinking, Fast and Slow", "author": "Daniel Kahneman", "isbn": "9780374533557" }, "theme": "Cognitive Biases", "title": "System 1 vs System 2", "summary": "The brain has two systems. System 1 is fast, automatic, emotional, and unconscious. System 2 is slow, effortful, logical, and conscious. We often let System 1 make complex decisions that require System 2.", "takeaway": "Force System 2 to engage when stakes are high by intentionally delaying your response.", "reflectionQuestion": "When did you last make a snap emotional judgment that turned out completely wrong?" },
+          { "id": "psy-002", "type": "book_concept", "topic": "Psychology", "source": { "title": "Influence", "author": "Robert B. Cialdini", "isbn": "9780061241895" }, "theme": "Persuasion", "title": "Rule of Reciprocation", "summary": "Humans are wired to repay what another person provides. This sense of future obligation is a powerful, almost unavoidable tool for influence that bypasses rational thought.", "takeaway": "Be wary of uninvited favors. They are rarely free and usually establish a psychological debt.", "reflectionQuestion": "Have you ever bought something just because the seller offered a 'free' sample first?" },
+          { "id": "psy-003", "type": "book_concept", "topic": "Psychology", "source": { "title": "Atomic Habits", "author": "James Clear", "isbn": "9780735211292" }, "theme": "Habit Formation", "title": "Identity-Based Habits", "summary": "True behavior change is identity change. You'll stick with a habit because it becomes part of who you are, rather than something you are just trying to achieve.", "takeaway": "Every action is a vote for the type of person you wish to become. Focus on identity, not goals.", "reflectionQuestion": "What identity are your current daily habits casting votes for?" },
+          { "id": "psy-004", "type": "book_concept", "topic": "Psychology", "source": { "title": "The 7 Habits", "author": "Stephen R. Covey", "isbn": "9781451639612" }, "theme": "Proactivity", "title": "Circle of Influence", "summary": "Proactive people focus their efforts on their Circle of Influence—things they can control. Reactive people focus on the Circle of Concern—things they cannot control, leading to stress.", "takeaway": "Expand your influence by focusing entirely on what you can actually control.", "reflectionQuestion": "Are you currently stressing over your Circle of Concern or working on your Circle of Influence?" },
+          { "id": "psy-005", "type": "book_concept", "topic": "Psychology", "source": { "title": "The 5AM Club", "author": "Robin Sharma", "isbn": "9781443456623" }, "theme": "Routine", "title": "The 20/20/20 Formula", "summary": "The first hour of your day should be divided into three 20-minute blocks: move (exercise), reflect (meditate/journal), and grow (learn/read).", "takeaway": "Prime your brain and body for peak performance before the world wakes up.", "reflectionQuestion": "How do you currently spend the crucial first 60 minutes of your day?" },
 
           // PHILOSOPHY
-          { "id": "phi-001", "type": "book_concept", "topic": "Philosophy", "source": { "title": "The Power of Now", "author": "Eckhart Tolle", "isbn": "9781577314806" }, "theme": "Mindfulness", "title": "Clock Time vs Psychological Time", "summary": "Clock time is useful for practical scheduling. Psychological time is dwelling on past regrets or future anxieties, pulling you out of the present moment.", "takeaway": "Use clock time to plan, but drop it immediately once the plan is made.", "reflectionQuestion": "How much of your stress today is based on 'psychological time'?", "quiz": { "question": "What does Tolle define as 'Psychological Time'?", "options": ["Reading a watch", "Planning a meeting", "Dwelling on the past or future", "Time dilation in physics"], "answer": 2, "explanation": "Psychological time is mental dwelling, preventing presence." } },
-          { "id": "phi-002", "type": "book_concept", "topic": "Philosophy", "source": { "title": "Meditations", "author": "Marcus Aurelius", "isbn": "9780812968255" }, "theme": "Stoicism", "title": "The Obstacle is the Way", "summary": "The mind adapts and converts any obstacle to its own purposes. The impediment to action advances action.", "takeaway": "Don't avoid resistance. Use it as fuel to grow stronger.", "reflectionQuestion": "What current obstacle can you reframe as an opportunity?", "quiz": { "question": "How does Aurelius view obstacles?", "options": ["Unlucky events", "Fuel that advances action", "Signs to quit", "Punishments from gods"], "answer": 1, "explanation": "He believed what stands in the way becomes the way." } },
-          { "id": "phi-003", "type": "book_concept", "topic": "Philosophy", "source": { "title": "Meditations", "author": "Marcus Aurelius", "isbn": "9780812968255" }, "theme": "Control", "title": "Dichotomy of Control", "summary": "You have power over your mind, not outside events. Realize this, and you will find strength.", "takeaway": "Focus 100% of your energy only on what you can directly influence.", "reflectionQuestion": "Are you currently stressing over something entirely outside your control?", "quiz": { "question": "According to Stoicism, what do you have absolute power over?", "options": ["The economy", "Other people's opinions", "Your own mind and reactions", "Your health"], "answer": 2, "explanation": "You only control your internal reactions and choices." } },
-          { "id": "phi-004", "type": "book_concept", "topic": "Philosophy", "source": { "title": "The Art of War", "author": "Sun Tzu", "isbn": "9781590302255" }, "theme": "Strategy", "title": "Winning Without Fighting", "summary": "The supreme art of war is to subdue the enemy without fighting. True victory is achieved through strategic positioning and psychological dominance rather than brute force.", "takeaway": "Avoid direct conflict; win through preparation and positioning.", "reflectionQuestion": "What conflict in your life could be resolved through better positioning instead of confrontation?", "quiz": { "question": "What is the highest form of victory according to Sun Tzu?", "options": ["Destroying the enemy", "Winning without fighting", "Having the largest army", "Defending the castle"], "answer": 1, "explanation": "Subduing the enemy without fighting is the peak of strategic dominance." } },
+          { "id": "phi-001", "type": "book_concept", "topic": "Philosophy", "source": { "title": "The Power of Now", "author": "Eckhart Tolle", "isbn": "9781577314806" }, "theme": "Mindfulness", "title": "Psychological Time", "summary": "Clock time is useful for practical scheduling. Psychological time is dwelling on past regrets or future anxieties. It pulls you completely out of the present reality.", "takeaway": "Use clock time to make a plan, but drop it immediately once the plan is made.", "reflectionQuestion": "How much of your stress today is entirely based on 'psychological time'?" },
+          { "id": "phi-002", "type": "book_concept", "topic": "Philosophy", "source": { "title": "Meditations", "author": "Marcus Aurelius", "isbn": "9780812968255" }, "theme": "Stoicism", "title": "The Obstacle is the Way", "summary": "The mind adapts and converts any obstacle to its own purposes. The impediment to action advances action. What stands in the way becomes the way.", "takeaway": "Don't avoid resistance. Use it as literal fuel to grow stronger.", "reflectionQuestion": "What current major obstacle can you actively reframe as an opportunity?" },
+          { "id": "phi-003", "type": "book_concept", "topic": "Philosophy", "source": { "title": "Meditations", "author": "Marcus Aurelius", "isbn": "9780812968255" }, "theme": "Control", "title": "Dichotomy of Control", "summary": "You have power over your mind, not outside events. Realize this, and you will find unbreakable strength regardless of external circumstances.", "takeaway": "Focus 100% of your energy only on what you can directly internalize and influence.", "reflectionQuestion": "Are you currently exhausting yourself over something entirely outside your control?" },
+          { "id": "phi-004", "type": "book_concept", "topic": "Philosophy", "source": { "title": "The Art of War", "author": "Sun Tzu", "isbn": "9781590302255" }, "theme": "Strategy", "title": "Winning Without Fighting", "summary": "The supreme art of war is to subdue the enemy without fighting. True victory is achieved through strategic positioning and psychological dominance rather than brute force.", "takeaway": "Avoid direct confrontation. Win through immaculate preparation and positioning.", "reflectionQuestion": "What conflict in your life could be resolved through better positioning instead of a fight?" },
 
           // FINANCE
-          { "id": "fin-001", "type": "book_concept", "topic": "Finance", "source": { "title": "The Psychology of Money", "author": "Morgan Housel", "isbn": "9780857197689" }, "theme": "Wealth Building", "title": "Wealth is What You Don't See", "summary": "Spending money to show people how much money you have is the fastest way to have less money.", "takeaway": "Rich is a current income. Wealth is a hidden asset that provides future optionality.", "reflectionQuestion": "Are you buying things to build wealth, or just to look rich?", "quiz": { "question": "What is the difference between 'Rich' and 'Wealthy'?", "options": ["They are the same", "Rich is hidden, Wealth is visible", "Rich is current income, Wealth is unspent assets", "Wealth only applies to real estate"], "answer": 2, "explanation": "Wealth provides freedom and options; 'rich' means high current cash flow." } },
-          { "id": "fin-002", "type": "book_concept", "topic": "Finance", "source": { "title": "The Psychology of Money", "author": "Morgan Housel", "isbn": "9780857197689" }, "theme": "Compounding", "title": "The Power of Time", "summary": "Warren Buffett’s skill is investing, but his secret is time. 81.5B of his 84.5B net worth came after his 65th birthday.", "takeaway": "Earn pretty good returns that you can stick with for a long time.", "reflectionQuestion": "Can your investments be left untouched for 10+ years?", "quiz": { "question": "What is Warren Buffett's true secret?", "options": ["Insider trading", "Time (compounding)", "High-risk trading", "Real estate"], "answer": 1, "explanation": "The vast majority of his wealth came late in life due to compounding." } },
-          { "id": "fin-003", "type": "book_concept", "topic": "Finance", "source": { "title": "Rich Dad Poor Dad", "author": "Robert T. Kiyosaki", "isbn": "9781612681139" }, "theme": "Cash Flow", "title": "Assets vs. Liabilities", "summary": "An asset puts money in your pocket. A liability takes money out of your pocket.", "takeaway": "Focus on acquiring cash-flowing assets first.", "reflectionQuestion": "Were your three biggest purchases last year assets or liabilities?", "quiz": { "question": "How does Rich Dad define a liability?", "options": ["Something you own", "Something that takes money out of your pocket", "A bank loan", "Your personal car"], "answer": 1, "explanation": "If it costs you money to hold, it's a liability." } },
+          { "id": "fin-001", "type": "book_concept", "topic": "Finance", "source": { "title": "The Psychology of Money", "author": "Morgan Housel", "isbn": "9780857197689" }, "theme": "Wealth Building", "title": "Wealth is Unseen", "summary": "Spending money to show people how much money you have is the fastest way to have less money. Rich is a current income. Wealth is a hidden asset.", "takeaway": "Stop trying to look rich. True wealth provides future freedom and optionality.", "reflectionQuestion": "Are your recent big purchases building wealth, or just making you look rich?" },
+          { "id": "fin-002", "type": "book_concept", "topic": "Finance", "source": { "title": "The Psychology of Money", "author": "Morgan Housel", "isbn": "9780857197689" }, "theme": "Compounding", "title": "The Power of Time", "summary": "Warren Buffett’s skill is investing, but his secret is time. 81.5B of his 84.5B net worth came after his 65th birthday.", "takeaway": "Don't chase massive single returns. Earn 'pretty good' returns that you can stick with for a long time.", "reflectionQuestion": "Are your current investments structured so they can be left untouched for 10+ years?" },
+          { "id": "fin-003", "type": "book_concept", "topic": "Finance", "source": { "title": "Rich Dad Poor Dad", "author": "Robert T. Kiyosaki", "isbn": "9781612681139" }, "theme": "Cash Flow", "title": "Assets vs. Liabilities", "summary": "An asset puts money in your pocket regardless of if you work. A liability takes money out of your pocket. The middle class buys liabilities they think are assets.", "takeaway": "Focus all initial investing energy on acquiring cash-flowing assets first.", "reflectionQuestion": "Were your three biggest purchases last year true assets, or hidden liabilities?" },
 
           // ENGINEERING
-          { "id": "eng-001", "type": "book_concept", "topic": "Engineering", "source": { "title": "Shigley's Mechanical Design", "author": "Richard G. Budynas", "isbn": "9780073398204" }, "theme": "Factor of Safety", "title": "Designing for Uncertainty", "summary": "The Factor of Safety (n) is a multiplier applied to the expected load to determine design capacity. It accounts for uncertainties in materials, environments, and calculations.", "takeaway": "Good engineering balances failure risk with material efficiency.", "reflectionQuestion": "Where in your work could applying a 'factor of safety' prevent catastrophic failure?", "quiz": { "question": "Why is a Factor of Safety greater than 1 necessary?", "options": ["To make manufacturing cheaper", "To account for uncertainties", "To meet aesthetic requirements", "To increase machine speed"], "answer": 1, "explanation": "It creates a buffer against unpredictable variations in stress or strength." } },
-          { "id": "eng-002", "type": "book_concept", "topic": "Engineering", "source": { "title": "Shigley's Mechanical Design", "author": "Richard G. Budynas", "isbn": "9780073398204" }, "theme": "Fatigue Failure", "title": "The S-N Curve", "summary": "Metals can fail at stresses well below their yield strength if the load is cyclic. The S-N curve plots alternating stress vs. number of cycles to failure.", "takeaway": "If a part vibrates or rotates, design for infinite life, not just static load.", "reflectionQuestion": "What systems in your life are failing due to repetitive minor stress rather than one big impact?", "quiz": { "question": "What does fatigue failure result from?", "options": ["Extreme high temperatures", "Cyclic or repetitive loading", "Chemical corrosion", "Poor surface finish only"], "answer": 1, "explanation": "Cyclic loading causes microscopic cracks to propagate over time." } },
-          { "id": "eng-003", "type": "book_concept", "topic": "Engineering", "source": { "title": "Fracture Mechanics", "author": "T.L. Anderson", "isbn": "9780849316562" }, "theme": "Stress Concentration", "title": "Stress Intensity Factor (K)", "summary": "Stress is not uniform. At the tip of a crack or a sharp internal corner, local stress multiplies exponentially, governed by the Stress Intensity Factor.", "takeaway": "Fillet your corners. Avoid sharp internal geometry where forces flow.", "reflectionQuestion": "Are there 'sharp internal corners' in your team structure causing stress points?", "quiz": { "question": "What happens to stress at a sharp internal crack tip?", "options": ["It dissipates", "It equals the nominal stress", "It approaches infinity locally", "It turns into compression"], "answer": 2, "explanation": "Theoretical stress at a perfectly sharp crack tip approaches infinity, causing propagation." } },
-          { "id": "eng-004", "type": "book_concept", "topic": "Engineering", "source": { "title": "Structures: Or Why Things Don't Fall Down", "author": "J.E. Gordon", "isbn": "9780306812835" }, "theme": "Mechanics", "title": "Stress vs Strain", "summary": "Stress is how hard the atoms are being pulled apart (Force / Area). Strain is how much the material stretches in response (Change in Length / Original Length).", "takeaway": "Hooke's Law: Strain is directly proportional to stress, until it permanently yields.", "reflectionQuestion": "How much 'strain' are you showing under your current 'stress' load?", "quiz": { "question": "What does 'Strain' measure in solid mechanics?", "options": ["Force applied", "Deformation relative to original length", "Temperature change", "Material hardness"], "answer": 1, "explanation": "Strain is the geometric deformation caused by applied stress." } },
-          { "id": "eng-005", "type": "book_concept", "topic": "Engineering", "source": { "title": "The Design of Everyday Things", "author": "Don Norman", "isbn": "9780465050659" }, "theme": "Human Factors", "title": "Affordances", "summary": "An affordance is a physical characteristic of an object that suggests how it should be used. A flat plate on a door affords pushing. A handle affords pulling.", "takeaway": "If a user needs a sign to tell them how to use your design, your design is flawed.", "reflectionQuestion": "What 'doors' are you designing that people keep pulling instead of pushing?", "quiz": { "question": "If a door has a large vertical handle, what does it 'afford'?", "options": ["Pushing", "Sliding", "Pulling", "Ignoring"], "answer": 2, "explanation": "Handles visually and physically suggest the action of pulling." } }
+          { "id": "eng-001", "type": "book_concept", "topic": "Engineering", "source": { "title": "Shigley's Mechanical Design", "author": "Richard G. Budynas", "isbn": "9780073398204" }, "theme": "Factor of Safety", "title": "Designing for Uncertainty", "summary": "The Factor of Safety is a multiplier applied to expected load. It mathematically accounts for unknowns in materials, environments, and human error.", "takeaway": "Good engineering doesn't just meet the limit; it builds a buffer for catastrophic unpredictability.", "reflectionQuestion": "Where in your personal or work life do you need to apply a stronger 'factor of safety'?" },
+          { "id": "eng-002", "type": "book_concept", "topic": "Engineering", "source": { "title": "Shigley's Mechanical Design", "author": "Richard G. Budynas", "isbn": "9780073398204" }, "theme": "Fatigue", "title": "The S-N Curve", "summary": "Metals can fail at stresses well below their yield strength if the load is cyclic. If a part vibrates or rotates, you must design for infinite life, not static load.", "takeaway": "Repetitive minor stresses will eventually cause catastrophic failure just as effectively as one massive blow.", "reflectionQuestion": "What systems in your life are quietly failing due to repetitive minor stress?" },
+          { "id": "eng-003", "type": "book_concept", "topic": "Engineering", "source": { "title": "Fracture Mechanics", "author": "T.L. Anderson", "isbn": "9780849316562" }, "theme": "Stress Fields", "title": "Stress Intensity Factor", "summary": "Stress isn't distributed uniformly. At the tip of a crack or a perfectly sharp internal corner, local stress multiplies exponentially, tearing the material apart.", "takeaway": "Fillet your corners. Avoid sharp, rigid internal geometry where force needs to flow smoothly.", "reflectionQuestion": "Are there 'sharp internal corners' in your team structure causing localized stress points?" }
         ];
 
         /* ==========================================
@@ -357,11 +370,10 @@
            ========================================== */
         const Utils = {
             shuffleArray(array) {
-                let currentIndex = array.length, randomIndex;
-                while (currentIndex !== 0) {
-                    randomIndex = Math.floor(Math.random() * currentIndex);
-                    currentIndex--;
-                    [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+                let cur = array.length, rnd;
+                while (cur !== 0) {
+                    rnd = Math.floor(Math.random() * cur); cur--;
+                    [array[cur], array[rnd]] = [array[rnd], array[cur]];
                 }
                 return array;
             },
@@ -380,10 +392,15 @@
             }
         };
 
+        /* ==========================================
+           DATA STORE
+           ========================================== */
         const Store = {
             data: CONTENT_LIBRARY,
             likes: JSON.parse(localStorage.getItem('lumin_likes')) || [],
             notes: JSON.parse(localStorage.getItem('lumin_notes')) || [],
+            seen: JSON.parse(localStorage.getItem('lumin_seen')) || {},
+            
             init() { this.notify(); },
             toggleLike(id) {
                 if (this.likes.includes(id)) { this.likes = this.likes.filter(itemId => itemId !== id); } 
@@ -395,10 +412,16 @@
                 this.notes.push({ id: 'note_' + Date.now(), itemId: itemId, text: text, date: new Date().toISOString() });
                 this.save('lumin_notes', this.notes);
             },
+            markSeen(id) {
+                if (!this.seen[id]) {
+                    this.seen[id] = Date.now();
+                    this.save('lumin_seen', this.seen);
+                }
+            },
             save(key, payload) { localStorage.setItem(key, JSON.stringify(payload)); this.notify(); },
             notify() { window.dispatchEvent(new CustomEvent('store-updated')); },
             resetAll() {
-                if(confirm("Are you sure? This deletes all your notes, likes, and saves.")) { localStorage.clear(); location.reload(); }
+                if(confirm("Are you sure? This deletes all your notes, likes, and reading history.")) { localStorage.clear(); location.reload(); }
             }
         };
 
@@ -436,13 +459,12 @@
 
                 const html = document.documentElement;
                 const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-                const savedTheme = localStorage.getItem('lumin_theme') || 'light';
+                const savedTheme = localStorage.getItem('lumin_theme') || 'dark'; // default dark for reels
                 
                 const applyTheme = (theme) => {
                     html.setAttribute('data-theme', theme);
                     metaThemeColor.setAttribute('content', theme === 'dark' ? '#000000' : '#f2f2f7');
                 };
-                
                 applyTheme(savedTheme);
                 
                 document.getElementById('theme-toggle').addEventListener('click', () => {
@@ -457,7 +479,7 @@
         };
 
         /* ==========================================
-           FEED MODULE
+           FEED MODULE (INSTAGRAM STYLE / WEIGHTED)
            ========================================== */
         const Feed = {
             currentPool: [],
@@ -476,74 +498,109 @@
                     document.getElementById('feed-container').scrollTo(0,0);
                 });
 
+                // Intersection Observer for scroll animation & seen tracking
+                this.observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('in-view');
+                            Store.markSeen(entry.target.dataset.id);
+                        } else {
+                            entry.target.classList.remove('in-view');
+                        }
+                    });
+                }, { threshold: 0.65 });
+
                 this.render('all');
+            },
+
+            generateWeightedPool(topicFilter) {
+                let base = Store.data;
+                if (topicFilter && topicFilter !== 'all') {
+                    base = base.filter(item => item.topic === topicFilter);
+                }
+                
+                // Separate unseen and seen
+                let unseen = base.filter(i => !Store.seen[i.id]);
+                let seen = base.filter(i => Store.seen[i.id]);
+                
+                // Shuffle unseen completely
+                unseen = Utils.shuffleArray(unseen);
+                
+                // Sort seen by oldest (timestamp ascending), then add slight randomness
+                seen.sort((a, b) => Store.seen[a.id] - Store.seen[b.id]);
+                
+                // Construct pool: All unseen first, then oldest seen
+                return [...unseen, ...seen];
             },
 
             render(topicFilter) {
                 const container = document.getElementById('feed-container');
                 container.innerHTML = '';
                 
-                let pool = Store.data;
-                if (topicFilter && topicFilter !== 'all') {
-                    pool = pool.filter(item => item.topic === topicFilter);
-                }
-                
-                this.currentPool = Utils.shuffleArray([...pool]);
-                this.appendBatch(container, this.currentPool);
-                
-                container.onscroll = () => {
-                    if (container.scrollTop + container.clientHeight >= container.scrollHeight - 1000) {
-                        const newBatch = Utils.shuffleArray([...this.currentPool]);
-                        this.appendBatch(container, newBatch);
-                    }
-                };
+                this.currentPool = this.generateWeightedPool(topicFilter);
+                this.appendBatch(container, this.currentPool); // Append all in right order
             },
             
+            getGradientClass(topic) {
+                if (topic === 'Psychology') return 'grad-psychology';
+                if (topic === 'Philosophy') return 'grad-philosophy';
+                if (topic === 'Finance') return 'grad-finance';
+                if (topic === 'Engineering') return 'grad-engineering';
+                return '';
+            },
+
             appendBatch(container, batch) {
                 batch.forEach(item => {
                     const isLiked = Store.likes.includes(item.id);
                     const coverUrl = `https://covers.openlibrary.org/b/isbn/${item.source.isbn}-L.jpg`;
-                    const fallbackHTML = `<div class='image-fallback'><h3>${item.source.title}</h3><p style='color:var(--text-secondary); margin-top:5px;'>${item.source.author}</p></div>`;
+                    const gradient = this.getGradientClass(item.topic);
                     
                     const cardWrapper = document.createElement('div');
                     cardWrapper.className = 'feed-card-wrapper';
                     
                     cardWrapper.innerHTML = `
-                        <div class="feed-card">
+                        <div class="feed-card ${gradient}" data-id="${item.id}">
                             <div class="heart-overlay"><svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg></div>
                             <div class="card-image-container">
-                                <img src="${coverUrl}" class="card-image" alt="${item.source.title}" onerror="this.outerHTML=&quot;${fallbackHTML}&quot;">
+                                <img src="${coverUrl}" class="card-image" alt="${item.source.title}" onerror="this.style.display='none'">
                             </div>
+                            
                             <div class="card-content">
                                 <span class="card-tag">${item.theme}</span>
                                 <h2 class="card-title">${item.title}</h2>
                                 <p class="card-summary">${item.summary}</p>
-                                <button class="secondary-btn btn-expand" data-id="${item.id}" style="width:auto; align-self:flex-start; padding: 6px 14px; font-size:14px; min-height:0; margin-top:5px;">Expand</button>
+                                <button class="btn-expand" style="background:rgba(255,255,255,0.2); backdrop-filter:blur(10px); color:#fff; border:none; padding:10px 16px; border-radius:12px; font-weight:700; width:fit-content; cursor:pointer;">Deep Dive</button>
                             </div>
+
                             <div class="card-actions">
                                 <button class="action-btn btn-like ${isLiked ? 'liked' : ''}" data-id="${item.id}">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
                                     <span>Like</span>
                                 </button>
                                 <button class="action-btn btn-note" data-id="${item.id}">
-                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"></path><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"></path></svg>
+                                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
                                     <span>Note</span>
                                 </button>
                             </div>
                         </div>
                     `;
                     container.appendChild(cardWrapper);
+                    this.observer.observe(cardWrapper.querySelector('.feed-card'));
                     this.bindCardEvents(cardWrapper, item);
                 });
             },
 
             bindCardEvents(cardWrapper, item) {
                 let lastTap = 0;
-                const imageContainer = cardWrapper.querySelector('.card-image-container');
+                const card = cardWrapper.querySelector('.feed-card');
                 const likeBtn = cardWrapper.querySelector('.btn-like');
                 const heartOverlay = cardWrapper.querySelector('.heart-overlay');
 
-                imageContainer.addEventListener('click', () => {
+                // Double tap like on the card body
+                card.addEventListener('click', (e) => {
+                    // Don't trigger if they clicked a button
+                    if(e.target.closest('button')) return; 
+
                     const currentTime = new Date().getTime();
                     const tapLength = currentTime - lastTap;
                     if (tapLength < 300 && tapLength > 0) { 
@@ -564,8 +621,8 @@
                     document.getElementById('expand-tag').innerText = item.theme;
                     document.getElementById('expand-title').innerText = item.title;
                     document.getElementById('expand-summary').innerText = item.summary;
-                    document.getElementById('expand-quote').innerText = `"${item.takeaway}"`;
-                    document.getElementById('expand-question').innerText = item.reflectionQuestion;
+                    document.getElementById('expand-quote').innerText = item.takeaway;
+                    document.getElementById('expand-question').innerText = `"${item.reflectionQuestion}"`;
                     Utils.openSheet('expand-modal');
                 });
 
@@ -582,10 +639,10 @@
         };
 
         /* ==========================================
-           STUDY MODULE
+           STUDY MODULE (QUIZLET FLASHCARDS)
            ========================================== */
         const Study = {
-            deck: [], currentIndex: 0, currentMode: 'flashcards',
+            deck: [], currentIndex: 0,
             
             init() {
                 const topicSelect = document.getElementById('study-topic');
@@ -602,11 +659,7 @@
                     sourceSelect.innerHTML = '<option value="all">Shuffle All Books</option>';
                     const selectedTopic = topicSelect.value;
                     let filteredData = Store.data;
-                    
-                    if(selectedTopic !== 'all') {
-                        filteredData = Store.data.filter(i => i.topic === selectedTopic);
-                    }
-                    
+                    if(selectedTopic !== 'all') filteredData = Store.data.filter(i => i.topic === selectedTopic);
                     const books = [...new Set(filteredData.map(i => i.source.title))];
                     books.forEach(b => {
                         const opt = document.createElement('option');
@@ -627,15 +680,25 @@
                 const flashcard = document.getElementById('current-flashcard');
                 flashcard.addEventListener('click', () => {
                     flashcard.classList.toggle('is-flipped');
-                    document.getElementById('fc-controls').classList.remove('hidden');
+                    document.getElementById('fc-controls').classList.toggle('visible');
+                    document.getElementById('fc-hint').style.opacity = '0';
                 });
-                document.getElementById('btn-fc-missed').addEventListener('click', () => this.nextCard());
-                document.getElementById('btn-fc-knew').addEventListener('click', () => this.nextCard());
-                document.getElementById('btn-quiz-next').addEventListener('click', () => this.nextCard());
+
+                document.getElementById('btn-fc-missed').addEventListener('click', () => {
+                    // Rethink - Move to back of deck
+                    const item = this.deck.splice(this.currentIndex, 1)[0];
+                    this.deck.push(item);
+                    this.loadCard();
+                });
+                
+                document.getElementById('btn-fc-knew').addEventListener('click', () => {
+                    // Mastered - Move to next
+                    this.currentIndex++;
+                    this.loadCard();
+                });
             },
 
             startSession() {
-                const mode = document.getElementById('study-mode').value;
                 const topic = document.getElementById('study-topic').value;
                 const source = document.getElementById('study-source').value;
                 const likedOnly = document.getElementById('study-liked-only').checked;
@@ -646,71 +709,47 @@
                 if (source !== 'all') pool = pool.filter(i => i.source.title === source);
                 
                 if (pool.length === 0) {
-                    alert("No content matches these filters.");
+                    alert("No content matches these filters. Try broadening your selection.");
                     return;
                 }
 
                 this.deck = Utils.shuffleArray([...pool]);
                 this.currentIndex = 0;
-                this.currentMode = mode;
                 
-                document.getElementById('view-flashcard').classList.add('hidden');
-                document.getElementById('view-quiz').classList.add('hidden');
-                document.getElementById(`view-${mode}`).classList.remove('hidden');
-
                 document.getElementById('study-modal').classList.remove('hidden');
                 this.loadCard();
             },
 
             loadCard() {
                 if (this.currentIndex >= this.deck.length) {
-                    alert("Session completed! Great job.");
+                    alert("Session completed! Excellent reflection.");
                     document.getElementById('study-modal').classList.add('hidden');
                     return;
                 }
                 const item = this.deck[this.currentIndex];
                 document.getElementById('study-progress').innerText = `${this.currentIndex + 1} / ${this.deck.length}`;
 
-                if (this.currentMode === 'flashcards') {
-                    document.getElementById('fc-q').innerText = item.quiz.question;
-                    document.getElementById('fc-a').innerText = item.quiz.options[item.quiz.answer];
-                    document.getElementById('current-flashcard').classList.remove('is-flipped');
-                    document.getElementById('fc-controls').classList.add('hidden');
-                } else if (this.currentMode === 'quiz') {
-                    document.getElementById('quiz-q').innerText = item.quiz.question;
-                    const optionsContainer = document.getElementById('quiz-options');
-                    optionsContainer.innerHTML = '';
-                    document.getElementById('quiz-feedback').innerText = '';
-                    document.getElementById('btn-quiz-next').classList.add('hidden');
-                    
-                    item.quiz.options.forEach((optText, index) => {
-                        const btn = document.createElement('button');
-                        btn.className = 'quiz-option';
-                        btn.innerText = optText;
-                        btn.addEventListener('click', () => this.handleQuizAnswer(btn, index, item));
-                        optionsContainer.appendChild(btn);
-                    });
-                }
-            },
-            
-            handleQuizAnswer(btn, selectedIndex, item) {
-                const buttons = document.getElementById('quiz-options').querySelectorAll('button');
-                buttons.forEach(b => b.disabled = true);
-                
-                if (selectedIndex === item.quiz.answer) {
-                    btn.classList.add('correct');
-                    document.getElementById('quiz-feedback').innerText = "Correct! " + item.quiz.explanation;
-                    document.getElementById('quiz-feedback').style.color = "var(--success-color)";
-                } else {
-                    btn.classList.add('wrong');
-                    buttons[item.quiz.answer].classList.add('correct');
-                    document.getElementById('quiz-feedback').innerText = "Incorrect. " + item.quiz.explanation;
-                    document.getElementById('quiz-feedback').style.color = "var(--danger-color)";
-                }
-                document.getElementById('btn-quiz-next').classList.remove('hidden');
-            },
+                // Front: Concept & Lesson
+                document.getElementById('fc-front-content').innerHTML = `
+                    <span class="fc-label">${item.theme}</span>
+                    <h2 class="fc-title">${item.title}</h2>
+                    <p class="fc-text">${item.summary}</p>
+                `;
 
-            nextCard() { this.currentIndex++; this.loadCard(); }
+                // Back: Application & Reflection
+                document.getElementById('fc-back-content').innerHTML = `
+                    <span class="fc-label" style="color:var(--success-color);">Application</span>
+                    <p class="fc-text" style="font-weight:600;">${item.takeaway}</p>
+                    <div style="height:1px; background:var(--border-color); margin: 20px 0;"></div>
+                    <span class="fc-label">Reflection</span>
+                    <p class="fc-italic">"${item.reflectionQuestion}"</p>
+                `;
+
+                // Reset state
+                document.getElementById('current-flashcard').classList.remove('is-flipped');
+                document.getElementById('fc-controls').classList.remove('visible');
+                document.getElementById('fc-hint').style.opacity = '1';
+            }
         };
 
         /* ==========================================
@@ -790,7 +829,6 @@
                         const currentDistance = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
                         const pinchCenterX = (e.touches[0].clientX + e.touches[1].clientX) / 2;
                         const pinchCenterY = (e.touches[0].clientY + e.touches[1].clientY) / 2;
-                        
                         const delta = (currentDistance - this.initialPinchDistance) * 0.0015;
                         this.zoomAt(delta, pinchCenterX, pinchCenterY);
                         this.initialPinchDistance = currentDistance;
@@ -798,9 +836,7 @@
                 }, { passive: false });
 
                 this.viewport.addEventListener('touchend', () => { this.isDragging = false; this.initialPinchDistance = null; });
-
-                const vCX = window.innerWidth / 2;
-                const vCY = window.innerHeight / 2;
+                const vCX = window.innerWidth / 2; const vCY = window.innerHeight / 2;
                 document.getElementById('btn-zoom-in').addEventListener('click', () => this.zoomAt(0.2, vCX, vCY));
                 document.getElementById('btn-zoom-out').addEventListener('click', () => this.zoomAt(-0.2, vCX, vCY));
                 document.getElementById('btn-zoom-fit').addEventListener('click', () => this.panTo(2500, 2500, 0.35));
@@ -826,9 +862,7 @@
                     const tStartAngle = tIdx * (2 * Math.PI / topicKeys.length);
                     const tEndAngle = (tIdx + 1) * (2 * Math.PI / topicKeys.length);
                     const tMidAngle = (tStartAngle + tEndAngle) / 2;
-                    
-                    const tx = cx + Math.cos(tMidAngle) * 400; 
-                    const ty = cy + Math.sin(tMidAngle) * 400;
+                    const tx = cx + Math.cos(tMidAngle) * 400; const ty = cy + Math.sin(tMidAngle) * 400;
                     
                     htmlNodes += `<div class="map-node node-root" style="left:${tx}px; top:${ty}px;">${topicName}</div>`;
                     
@@ -838,9 +872,7 @@
                         const bStartAngle = tStartAngle + bIdx * bSliceWidth;
                         const bEndAngle = tStartAngle + (bIdx + 1) * bSliceWidth;
                         const bMidAngle = (bStartAngle + bEndAngle) / 2;
-                        
-                        const bx = cx + Math.cos(bMidAngle) * 900; 
-                        const by = cy + Math.sin(bMidAngle) * 900;
+                        const bx = cx + Math.cos(bMidAngle) * 900; const by = cy + Math.sin(bMidAngle) * 900;
                         
                         svgLines += `<line x1="${tx}" y1="${ty}" x2="${bx}" y2="${by}" class="map-line"/>`;
                         htmlNodes += `<div class="map-node node-book" style="left:${bx}px; top:${by}px;">${bookName}</div>`;
@@ -852,9 +884,7 @@
                             const iStartAngle = bStartAngle + iIdx * iSliceWidth;
                             const iEndAngle = bStartAngle + (iIdx + 1) * iSliceWidth;
                             const iMidAngle = (iStartAngle + iEndAngle) / 2;
-                            
-                            const ix = cx + Math.cos(iMidAngle) * 1400; 
-                            const iy = cy + Math.sin(iMidAngle) * 1400;
+                            const ix = cx + Math.cos(iMidAngle) * 1400; const iy = cy + Math.sin(iMidAngle) * 1400;
                             
                             svgLines += `<line x1="${bx}" y1="${by}" x2="${ix}" y2="${iy}" class="map-line"/>`;
                             htmlNodes += `<div class="map-node node-item" style="left:${ix}px; top:${iy}px;">${item.theme}</div>`;
@@ -862,8 +892,7 @@
                             const itemNotes = Store.notes.filter(n => n.itemId === item.id);
                             itemNotes.forEach((note, nIdx) => {
                                 const nAngle = iMidAngle + ((nIdx - itemNotes.length/2 + 0.5) * 0.15);
-                                const nx = cx + Math.cos(nAngle) * 1800;
-                                const ny = cy + Math.sin(nAngle) * 1800;
+                                const nx = cx + Math.cos(nAngle) * 1800; const ny = cy + Math.sin(nAngle) * 1800;
                                 
                                 svgLines += `<line x1="${ix}" y1="${iy}" x2="${nx}" y2="${ny}" class="map-line"/>`;
                                 htmlNodes += `<div class="map-node node-note" style="left:${nx}px; top:${ny}px;">"${note.text}"</div>`;
@@ -882,6 +911,7 @@
             render() {
                 document.getElementById('stat-likes').innerText = Store.likes.length;
                 document.getElementById('stat-notes').innerText = Store.notes.length;
+                document.getElementById('stat-seen').innerText = Object.keys(Store.seen).length;
             }
         };
 
