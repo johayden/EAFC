@@ -26,7 +26,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-        html, body { height: 100%; background-color: var(--bg-color); /* Syncs iOS overscroll background */ }
+        html, body { height: 100%; background-color: var(--bg-color); }
         body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text-primary); overflow: hidden; user-select: none; -webkit-user-select: none; transition: background-color 0.3s ease, color 0.3s ease; }
         button, input, select, textarea { font-family: inherit; font-size: 16px; }
 
@@ -330,9 +330,14 @@
           { "id": "psy-001", "type": "book_concept", "topic": "Psychology", "source": { "title": "Thinking, Fast and Slow", "author": "Daniel Kahneman", "isbn": "9780374533557" }, "theme": "Cognitive Biases", "title": "System 1 vs System 2", "summary": "The brain has two systems. System 1 is fast, automatic, emotional, and unconscious. System 2 is slow, effortful, logical, and conscious.", "takeaway": "Force System 2 to engage when stakes are high.", "reflectionQuestion": "When did you last make a snap judgment that turned out wrong?", "quiz": { "question": "Which system calculates 17 x 24?", "options": ["System 1", "System 2", "Limbic system", "Automatic system"], "answer": 1, "explanation": "System 2 handles effortful mental activities like complex math." } },
           { "id": "psy-002", "type": "book_concept", "topic": "Psychology", "source": { "title": "Influence", "author": "Robert B. Cialdini", "isbn": "9780061241895" }, "theme": "Persuasion", "title": "Rule of Reciprocation", "summary": "Humans are wired to repay what another person provides. This sense of future obligation is a powerful tool for influence.", "takeaway": "Be wary of uninvited favours.", "reflectionQuestion": "Have you bought something just because of a free sample?", "quiz": { "question": "Why do free samples increase sales?", "options": ["Taste better", "People feel obligated", "Makes people hungry", "Lower price"], "answer": 1, "explanation": "It triggers a feeling of indebtedness." } },
           { "id": "psy-003", "type": "book_concept", "topic": "Psychology", "source": { "title": "Atomic Habits", "author": "James Clear", "isbn": "9780735211292" }, "theme": "Habit Formation", "title": "Identity-Based Habits", "summary": "True behaviour change is identity change. You'll stick with a habit because it becomes part of who you are.", "takeaway": "Every action is a vote for the type of person you wish to become.", "reflectionQuestion": "What identity are your daily habits voting for?", "quiz": { "question": "What is the most effective level to change a habit?", "options": ["Outcomes", "Processes", "Identity", "Environment"], "answer": 2, "explanation": "Identity change shifts how you view yourself." } },
-          { "id": "psy-006", "type": "book_concept", "topic": "Psychology", "source": { "title": "The Power of Now", "author": "Eckhart Tolle", "isbn": "9781577314806" }, "theme": "Mindfulness", "title": "Clock Time vs Psychological Time", "summary": "Clock time is useful for practical scheduling. Psychological time is dwelling on past regrets or future anxieties, pulling you out of the present moment.", "takeaway": "Use clock time to plan, but drop it immediately once the plan is made.", "reflectionQuestion": "How much of your stress today is based on 'psychological time'?", "quiz": { "question": "What does Tolle define as 'Psychological Time'?", "options": ["Reading a watch", "Planning a meeting", "Dwelling on the past or future", "Time dilation in physics"], "answer": 2, "explanation": "Psychological time is mental dwelling, preventing presence." } },
-          { "id": "psy-007", "type": "book_concept", "topic": "Psychology", "source": { "title": "Meditations", "author": "Marcus Aurelius", "isbn": "9780812968255" }, "theme": "Stoicism", "title": "The Obstacle is the Way", "summary": "The mind adapts and converts any obstacle to its own purposes. The impediment to action advances action.", "takeaway": "Don't avoid resistance. Use it as fuel to grow stronger.", "reflectionQuestion": "What current obstacle can you reframe as an opportunity?", "quiz": { "question": "How does Aurelius view obstacles?", "options": ["Unlucky events", "Fuel that advances action", "Signs to quit", "Punishments from gods"], "answer": 1, "explanation": "He believed what stands in the way becomes the way." } },
-          { "id": "psy-008", "type": "book_concept", "topic": "Psychology", "source": { "title": "Meditations", "author": "Marcus Aurelius", "isbn": "9780812968255" }, "theme": "Control", "title": "Dichotomy of Control", "summary": "You have power over your mind, not outside events. Realize this, and you will find strength.", "takeaway": "Focus 100% of your energy only on what you can directly influence.", "reflectionQuestion": "Are you currently stressing over something entirely outside your control?", "quiz": { "question": "According to Stoicism, what do you have absolute power over?", "options": ["The economy", "Other people's opinions", "Your own mind and reactions", "Your health"], "answer": 2, "explanation": "You only control your internal reactions and choices." } },
+          { "id": "psy-004", "type": "book_concept", "topic": "Psychology", "source": { "title": "The 7 Habits of Highly Effective People", "author": "Stephen R. Covey", "isbn": "9781451639612" }, "theme": "Proactivity", "title": "Circle of Influence", "summary": "Proactive people focus their efforts on their Circle of Influence—things they can control. Reactive people focus on the Circle of Concern—things they cannot control, leading to victimization and stress.", "takeaway": "Expand your influence by focusing only on what you can actually control.", "reflectionQuestion": "Are you currently stressing over your Circle of Concern or working on your Circle of Influence?", "quiz": { "question": "What do proactive people focus their energy on?", "options": ["The Circle of Concern", "Other people's actions", "The Circle of Influence", "Past mistakes"], "answer": 2, "explanation": "The Circle of Influence contains things you can directly control or impact." } },
+          { "id": "psy-005", "type": "book_concept", "topic": "Psychology", "source": { "title": "The 5AM Club", "author": "Robin Sharma", "isbn": "9781443456623" }, "theme": "Routine", "title": "The 20/20/20 Formula", "summary": "The first hour of your day should be divided into three 20-minute blocks: move (exercise), reflect (meditate/journal), and grow (learn/read). This primes your brain and body for peak performance.", "takeaway": "Own your morning to elevate your life.", "reflectionQuestion": "How do you currently spend the first 60 minutes of your day?", "quiz": { "question": "What are the three 20-minute blocks in the 20/20/20 formula?", "options": ["Eat, Sleep, Work", "Move, Reflect, Grow", "Read, Write, Speak", "Run, Lift, Stretch"], "answer": 1, "explanation": "The routine focuses on physical, mental, and personal growth to start the day." } },
+
+          // PHILOSOPHY
+          { "id": "phi-001", "type": "book_concept", "topic": "Philosophy", "source": { "title": "The Power of Now", "author": "Eckhart Tolle", "isbn": "9781577314806" }, "theme": "Mindfulness", "title": "Clock Time vs Psychological Time", "summary": "Clock time is useful for practical scheduling. Psychological time is dwelling on past regrets or future anxieties, pulling you out of the present moment.", "takeaway": "Use clock time to plan, but drop it immediately once the plan is made.", "reflectionQuestion": "How much of your stress today is based on 'psychological time'?", "quiz": { "question": "What does Tolle define as 'Psychological Time'?", "options": ["Reading a watch", "Planning a meeting", "Dwelling on the past or future", "Time dilation in physics"], "answer": 2, "explanation": "Psychological time is mental dwelling, preventing presence." } },
+          { "id": "phi-002", "type": "book_concept", "topic": "Philosophy", "source": { "title": "Meditations", "author": "Marcus Aurelius", "isbn": "9780812968255" }, "theme": "Stoicism", "title": "The Obstacle is the Way", "summary": "The mind adapts and converts any obstacle to its own purposes. The impediment to action advances action.", "takeaway": "Don't avoid resistance. Use it as fuel to grow stronger.", "reflectionQuestion": "What current obstacle can you reframe as an opportunity?", "quiz": { "question": "How does Aurelius view obstacles?", "options": ["Unlucky events", "Fuel that advances action", "Signs to quit", "Punishments from gods"], "answer": 1, "explanation": "He believed what stands in the way becomes the way." } },
+          { "id": "phi-003", "type": "book_concept", "topic": "Philosophy", "source": { "title": "Meditations", "author": "Marcus Aurelius", "isbn": "9780812968255" }, "theme": "Control", "title": "Dichotomy of Control", "summary": "You have power over your mind, not outside events. Realize this, and you will find strength.", "takeaway": "Focus 100% of your energy only on what you can directly influence.", "reflectionQuestion": "Are you currently stressing over something entirely outside your control?", "quiz": { "question": "According to Stoicism, what do you have absolute power over?", "options": ["The economy", "Other people's opinions", "Your own mind and reactions", "Your health"], "answer": 2, "explanation": "You only control your internal reactions and choices." } },
+          { "id": "phi-004", "type": "book_concept", "topic": "Philosophy", "source": { "title": "The Art of War", "author": "Sun Tzu", "isbn": "9781590302255" }, "theme": "Strategy", "title": "Winning Without Fighting", "summary": "The supreme art of war is to subdue the enemy without fighting. True victory is achieved through strategic positioning and psychological dominance rather than brute force.", "takeaway": "Avoid direct conflict; win through preparation and positioning.", "reflectionQuestion": "What conflict in your life could be resolved through better positioning instead of confrontation?", "quiz": { "question": "What is the highest form of victory according to Sun Tzu?", "options": ["Destroying the enemy", "Winning without fighting", "Having the largest army", "Defending the castle"], "answer": 1, "explanation": "Subduing the enemy without fighting is the peak of strategic dominance." } },
 
           // FINANCE
           { "id": "fin-001", "type": "book_concept", "topic": "Finance", "source": { "title": "The Psychology of Money", "author": "Morgan Housel", "isbn": "9780857197689" }, "theme": "Wealth Building", "title": "Wealth is What You Don't See", "summary": "Spending money to show people how much money you have is the fastest way to have less money.", "takeaway": "Rich is a current income. Wealth is a hidden asset that provides future optionality.", "reflectionQuestion": "Are you buying things to build wealth, or just to look rich?", "quiz": { "question": "What is the difference between 'Rich' and 'Wealthy'?", "options": ["They are the same", "Rich is hidden, Wealth is visible", "Rich is current income, Wealth is unspent assets", "Wealth only applies to real estate"], "answer": 2, "explanation": "Wealth provides freedom and options; 'rich' means high current cash flow." } },
@@ -351,7 +356,6 @@
            UTILITIES
            ========================================== */
         const Utils = {
-            // Fisher-Yates shuffle for true TikTok-style randomness
             shuffleArray(array) {
                 let currentIndex = array.length, randomIndex;
                 while (currentIndex !== 0) {
@@ -403,7 +407,6 @@
            ========================================== */
         const UI = {
             init() {
-                // Nav Tabbing
                 document.querySelectorAll('.nav-item').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         const targetId = e.currentTarget.getAttribute('data-target');
@@ -415,7 +418,6 @@
                         document.querySelectorAll('.tab-view').forEach(t => t.classList.remove('active'));
                         document.getElementById(targetId).classList.add('active');
                         
-                        // Header UI switch based on context
                         if (targetId === 'tab-home') {
                             document.getElementById('header-title').classList.add('hidden');
                             document.getElementById('feed-topic-filter').classList.remove('hidden');
@@ -432,7 +434,6 @@
                     });
                 });
 
-                // iOS Theme Background Sync
                 const html = document.documentElement;
                 const metaThemeColor = document.querySelector('meta[name="theme-color"]');
                 const savedTheme = localStorage.getItem('lumin_theme') || 'light';
@@ -450,9 +451,7 @@
                     applyTheme(next);
                 });
                 
-                // Tap Overlay to Close Sheets
                 document.getElementById('sheet-overlay').addEventListener('click', () => Utils.closeAllSheets());
-                
                 window.addEventListener('store-updated', () => Profile.render());
             }
         };
@@ -464,7 +463,6 @@
             currentPool: [],
             
             init() {
-                // Populate Filter Dropdown
                 const filterSelect = document.getElementById('feed-topic-filter');
                 const topics = [...new Set(Store.data.map(i => i.topic))];
                 topics.forEach(t => {
@@ -485,7 +483,6 @@
                 const container = document.getElementById('feed-container');
                 container.innerHTML = '';
                 
-                // Filter and true shuffle
                 let pool = Store.data;
                 if (topicFilter && topicFilter !== 'all') {
                     pool = pool.filter(item => item.topic === topicFilter);
@@ -494,7 +491,6 @@
                 this.currentPool = Utils.shuffleArray([...pool]);
                 this.appendBatch(container, this.currentPool);
                 
-                // Infinite scroll cloner
                 container.onscroll = () => {
                     if (container.scrollTop + container.clientHeight >= container.scrollHeight - 1000) {
                         const newBatch = Utils.shuffleArray([...this.currentPool]);
@@ -595,7 +591,6 @@
                 const topicSelect = document.getElementById('study-topic');
                 const sourceSelect = document.getElementById('study-source');
                 
-                // Populate Topics
                 const topics = [...new Set(Store.data.map(i => i.topic))];
                 topics.forEach(t => {
                     const opt = document.createElement('option');
@@ -603,7 +598,6 @@
                     topicSelect.appendChild(opt);
                 });
 
-                // Function to update Books based on Topic
                 const updateBooks = () => {
                     sourceSelect.innerHTML = '<option value="all">Shuffle All Books</option>';
                     const selectedTopic = topicSelect.value;
@@ -621,9 +615,8 @@
                     });
                 };
                 
-                // Bind Dynamic Dependency
                 topicSelect.addEventListener('change', updateBooks);
-                updateBooks(); // Initial load
+                updateBooks();
 
                 document.getElementById('btn-start-study').addEventListener('click', () => this.startSession());
                 
